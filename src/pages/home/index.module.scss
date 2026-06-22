@@ -1,0 +1,192 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  background: $gradient-primary;
+  padding: $spacing-xl $page-padding $spacing-xxl;
+  color: $color-text-white;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -100rpx;
+    right: -100rpx;
+    width: 300rpx;
+    height: 300rpx;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+}
+
+.greeting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.greetingText {
+  flex: 1;
+}
+
+.hello {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-xs;
+}
+
+.date {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: $radius-round;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  overflow: hidden;
+  
+  image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.content {
+  padding: 0 $page-padding;
+  margin-top: -80rpx;
+}
+
+.progressCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-float;
+  margin-bottom: $spacing-lg;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.progressTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.goSetting {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.progressItem {
+  margin-bottom: $spacing-md;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.dataGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.startBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-lg;
+  transition: all $transition-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.section {
+  margin-bottom: $spacing-lg;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.viewAll {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.empty {
+  text-align: center;
+  padding: $spacing-xxl 0;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}
+
+.loginTip {
+  background: rgba($color-primary, 0.1);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  text-align: center;
+  margin-bottom: $spacing-lg;
+}
+
+.loginTipText {
+  color: $color-primary;
+  font-size: $font-size-md;
+  margin-bottom: $spacing-md;
+}
+
+.loginBtn {
+  @include button-reset;
+  display: inline-block;
+  padding: 0 $spacing-xl;
+  height: $button-height-md;
+  background: $color-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}

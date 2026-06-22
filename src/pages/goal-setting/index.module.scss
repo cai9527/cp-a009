@@ -1,0 +1,170 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.content {
+  padding: $spacing-lg $page-padding;
+}
+
+.section {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-lg;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+}
+
+.goalItem {
+  margin-bottom: $spacing-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.goalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.goalLabel {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.goalIcon {
+  font-size: 36rpx;
+}
+
+.goalValue {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+}
+
+.sliderContainer {
+  padding: 0 $spacing-xs;
+}
+
+.slider {
+  width: 100%;
+}
+
+.sliderValues {
+  display: flex;
+  justify-content: space-between;
+  margin-top: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.quickPresets {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.presetBtn {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-button;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+  transition: all $transition-base;
+  
+  &.active {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.tip {
+  background: rgba($color-primary, 0.1);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.tipTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.tipContent {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.6;
+}
+
+.saveBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.placeholder {
+  text-align: center;
+  padding: $spacing-xxl * 2;
+}
+
+.placeholderIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-lg;
+}
+
+.placeholderText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-lg;
+}
+
+.loginBtn {
+  @include button-reset;
+  display: inline-block;
+  padding: 0 $spacing-xxl;
+  height: $button-height-md;
+  background: $color-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}

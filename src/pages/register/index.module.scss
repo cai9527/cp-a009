@@ -1,0 +1,124 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-xxl $page-padding;
+}
+
+.title {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xxl;
+}
+
+.form {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-lg;
+}
+
+.formItem {
+  margin-bottom: $spacing-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  background: $color-bg-hover;
+  border-radius: $radius-lg;
+  padding: 0 $spacing-md;
+  height: 96rpx;
+  border: 2rpx solid transparent;
+  transition: all $transition-base;
+  
+  &.focused {
+    border-color: $color-primary;
+    background: $color-bg-card;
+  }
+}
+
+.inputIcon {
+  font-size: 36rpx;
+  margin-right: $spacing-sm;
+}
+
+.input {
+  flex: 1;
+  height: 100%;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  background: transparent;
+}
+
+.codeBtn {
+  @include button-reset;
+  padding: 0 $spacing-md;
+  height: 64rpx;
+  background: $color-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  
+  &:active {
+    opacity: 0.9;
+  }
+  
+  &.disabled {
+    background: $color-text-disabled;
+  }
+}
+
+.registerBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-top: $spacing-xl;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+  
+  &.disabled {
+    background: $color-text-disabled;
+    box-shadow: none;
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: $spacing-lg;
+}
+
+.link {
+  color: $color-primary;
+  font-size: $font-size-sm;
+}

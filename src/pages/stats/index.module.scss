@@ -1,0 +1,266 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  background: $gradient-primary;
+  padding: $spacing-lg $page-padding $spacing-xxl;
+  color: $color-text-white;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-lg;
+}
+
+.tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-button;
+  padding: 6rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-sm 0;
+  font-size: $font-size-md;
+  border-radius: $radius-button;
+  transition: all $transition-base;
+  color: rgba(255, 255, 255, 0.8);
+  
+  &.active {
+    background: $color-bg-card;
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.content {
+  padding: 0 $page-padding;
+  margin-top: -40rpx;
+}
+
+.overview {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-float;
+  margin-bottom: $spacing-lg;
+}
+
+.overviewTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.overviewItem {
+  text-align: center;
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-lg;
+}
+
+.overviewValue {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  line-height: 1.2;
+}
+
+.overviewUnit {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-left: $spacing-xs;
+  font-weight: $font-weight-normal;
+}
+
+.overviewLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-top: $spacing-xs;
+}
+
+.chartSection {
+  margin-bottom: $spacing-lg;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.typeSection {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-lg;
+}
+
+.typeItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.typeIcon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  margin-right: $spacing-md;
+  
+  &.run {
+    background: rgba($sport-color-run, 0.1);
+  }
+  
+  &.ride {
+    background: rgba($sport-color-ride, 0.1);
+  }
+  
+  &.walk {
+    background: rgba($sport-color-walk, 0.1);
+  }
+}
+
+.typeInfo {
+  flex: 1;
+}
+
+.typeName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.typeBar {
+  height: 12rpx;
+  background: $color-bg-hover;
+  border-radius: $radius-round;
+  overflow: hidden;
+}
+
+.typeFill {
+  height: 100%;
+  border-radius: $radius-round;
+  transition: width $transition-slow ease;
+  
+  &.run {
+    background: $gradient-primary;
+  }
+  
+  &.ride {
+    background: $gradient-blue;
+  }
+  
+  &.walk {
+    background: $gradient-green;
+  }
+}
+
+.typeStats {
+  width: 160rpx;
+  text-align: right;
+  margin-left: $spacing-md;
+}
+
+.typeDistance {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.typePercent {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.recordsSection {
+  margin-bottom: $spacing-lg;
+}
+
+.filterTabs {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  overflow-x: auto;
+  padding-bottom: $spacing-xs;
+}
+
+.filterTab {
+  padding: $spacing-xs $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  white-space: nowrap;
+  transition: all $transition-base;
+  
+  &.active {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+}
+
+.empty {
+  text-align: center;
+  padding: $spacing-xxl 0;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+}
+
+.loginTip {
+  background: rgba($color-primary, 0.1);
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  text-align: center;
+  margin: $spacing-lg;
+}
+
+.loginTipText {
+  color: $color-primary;
+  font-size: $font-size-md;
+  margin-bottom: $spacing-lg;
+}
+
+.loginBtn {
+  @include button-reset;
+  display: inline-block;
+  padding: 0 $spacing-xxl;
+  height: $button-height-md;
+  background: $color-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}

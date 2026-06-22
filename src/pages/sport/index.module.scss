@@ -1,0 +1,213 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: $spacing-lg $page-padding;
+  display: flex;
+  flex-direction: column;
+}
+
+.typeSelector {
+  margin-bottom: $spacing-lg;
+}
+
+.dataPanel {
+  flex: 1;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-xxl $spacing-lg;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 400rpx;
+    height: 400rpx;
+    background: radial-gradient(circle, rgba($color-primary, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+}
+
+.mainData {
+  text-align: center;
+  margin-bottom: $spacing-xxl;
+  position: relative;
+  z-index: 1;
+}
+
+.mainLabel {
+  font-size: $font-size-md;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: $spacing-sm;
+  text-transform: uppercase;
+  letter-spacing: 4rpx;
+}
+
+.mainValue {
+  font-size: 120rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  
+  .unit {
+    font-size: 36rpx;
+    font-weight: $font-weight-normal;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: $spacing-xs;
+  }
+}
+
+.subData {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-lg;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.subItem {
+  text-align: center;
+}
+
+.subValue {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.subLabel {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: $spacing-xs;
+}
+
+.timeDisplay {
+  position: absolute;
+  top: $spacing-xl;
+  left: 0;
+  right: 0;
+  text-align: center;
+  
+  .time {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-white;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $spacing-xl;
+  padding: $spacing-lg 0;
+}
+
+.controlBtn {
+  @include button-reset;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-base;
+  font-size: 60rpx;
+  
+  &.start {
+    width: 200rpx;
+    height: 200rpx;
+    background: $gradient-primary;
+    box-shadow: 0 8rpx 32rpx rgba($color-primary, 0.4);
+    font-size: 80rpx;
+  }
+  
+  &.pause {
+    background: $gradient-primary;
+    box-shadow: 0 6rpx 24rpx rgba($color-primary, 0.3);
+  }
+  
+  &.resume {
+    background: $gradient-green;
+    box-shadow: 0 6rpx 24rpx rgba($color-success, 0.3);
+  }
+  
+  &.stop {
+    background: linear-gradient(135deg, #F53F3F 0%, #FF6B6B 100%);
+    box-shadow: 0 6rpx 24rpx rgba($color-error, 0.3);
+  }
+  
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+.btnText {
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  margin-top: $spacing-xs;
+  text-align: center;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loginTip {
+  background: rgba($color-primary, 0.1);
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  text-align: center;
+  margin: $spacing-lg;
+}
+
+.loginTipText {
+  color: $color-primary;
+  font-size: $font-size-md;
+  margin-bottom: $spacing-lg;
+}
+
+.loginBtn {
+  @include button-reset;
+  display: inline-block;
+  padding: 0 $spacing-xxl;
+  height: $button-height-md;
+  background: $color-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.idleTip {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: $font-size-sm;
+  margin-top: $spacing-lg;
+}

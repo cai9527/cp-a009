@@ -1,0 +1,261 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  background: $gradient-primary;
+  padding: $spacing-xxl $page-padding;
+  color: $color-text-white;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -100rpx;
+    left: -100rpx;
+    width: 400rpx;
+    height: 400rpx;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: $radius-round;
+  border: 6rpx solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  overflow: hidden;
+  margin-right: $spacing-lg;
+  
+  image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.userDetail {
+  flex: 1;
+}
+
+.nickname {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-xs;
+}
+
+.userMeta {
+  display: flex;
+  gap: $spacing-lg;
+  font-size: $font-size-sm;
+  opacity: 0.9;
+}
+
+.loginCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  text-align: center;
+  box-shadow: $shadow-card;
+}
+
+.loginTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.loginDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-lg;
+}
+
+.loginBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.content {
+  padding: 0 $page-padding;
+  margin-top: -40rpx;
+}
+
+.achievements {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-float;
+  margin-bottom: $spacing-lg;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+}
+
+.achievementScroll {
+  @include scroll-x-container;
+  margin: 0 -$spacing-lg;
+  padding: 0 $spacing-lg;
+}
+
+.achievementCard {
+  @include scroll-x-item(220rpx);
+  background: linear-gradient(135deg, rgba($color-primary, 0.1) 0%, rgba($color-primary-light, 0.05) 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-right: $spacing-md;
+  text-align: center;
+  
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.achievementIcon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-round;
+  background: $gradient-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  margin: 0 auto $spacing-sm;
+}
+
+.achievementValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  line-height: 1.2;
+}
+
+.achievementUnit {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-left: 4rpx;
+  font-weight: $font-weight-normal;
+}
+
+.achievementLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-top: $spacing-xs;
+}
+
+.menu {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-lg;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  transition: background $transition-fast;
+  
+  &:active {
+    background: $color-bg-hover;
+  }
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid $color-divider;
+  }
+}
+
+.menuIcon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  margin-right: $spacing-md;
+  
+  &.goal {
+    background: rgba($color-primary, 0.1);
+  }
+  
+  &.achievement {
+    background: rgba($color-warning, 0.1);
+  }
+  
+  &.data {
+    background: rgba($color-secondary, 0.1);
+  }
+  
+  &.setting {
+    background: rgba($color-text-tertiary, 0.1);
+  }
+  
+  &.about {
+    background: rgba($color-success, 0.1);
+  }
+}
+
+.menuText {
+  flex: 1;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.menuArrow {
+  font-size: $font-size-lg;
+  color: $color-text-tertiary;
+}
+
+.logoutSection {
+  margin-top: $spacing-lg;
+}
+
+.logoutBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  color: $color-error;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  box-shadow: $shadow-card;
+  
+  &:active {
+    background: $color-bg-hover;
+  }
+}
