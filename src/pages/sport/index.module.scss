@@ -1,10 +1,17 @@
 @use '@/styles/variables.scss' as *;
 
+.pageWrapper {
+  min-height: 100vh;
+  background: $color-bg-page;
+  position: relative;
+}
+
 .page {
   min-height: 100vh;
   background: $color-bg-page;
   display: flex;
   flex-direction: column;
+  padding-bottom: 200rpx;
 }
 
 .content {

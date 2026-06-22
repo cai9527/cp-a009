@@ -6,6 +6,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { mockSportRecords } from '@/data/mockSportRecords';
 import SimpleChart from '@/components/SimpleChart';
 import SportCard from '@/components/SportCard';
+import TabBar from '@/components/TabBar';
 import { SportType, SportTypeLabel, SportTypeIcon } from '@/types';
 import { 
   getWeekRecords, 
@@ -97,154 +98,160 @@ const StatsPage: React.FC = () => {
 
   if (!isLogin) {
     return (
-      <View className={styles.page}>
-        <View className={styles.loginTip}>
-          <Text className={styles.loginTipText}>登录后查看您的运动统计</Text>
-          <Button className={styles.loginBtn} onClick={handleGoLogin}>
-            立即登录
-          </Button>
+      <View className={styles.pageWrapper}>
+        <View className={styles.page}>
+          <View className={styles.loginTip}>
+            <Text className={styles.loginTipText}>登录后查看您的运动统计</Text>
+            <Button className={styles.loginBtn} onClick={handleGoLogin}>
+              立即登录
+            </Button>
+          </View>
         </View>
+        <TabBar current="stats" />
       </View>
     );
   }
 
   return (
-    <ScrollView className={styles.page} scrollY>
-      <View className={styles.header}>
-        <Text className={styles.title}>运动统计</Text>
-        <View className={styles.tabs}>
-          <Text 
-            className={classnames(styles.tab, timeRange === 'week' && styles.active)}
-            onClick={() => setTimeRange('week')}
-          >
-            周
-          </Text>
-          <Text 
-            className={classnames(styles.tab, timeRange === 'month' && styles.active)}
-            onClick={() => setTimeRange('month')}
-          >
-            月
-          </Text>
-          <Text 
-            className={classnames(styles.tab, timeRange === 'year' && styles.active)}
-            onClick={() => setTimeRange('year')}
-          >
-            年
-          </Text>
-        </View>
-      </View>
-
-      <View className={styles.content}>
-        <View className={styles.overview}>
-          <Text className={styles.overviewTitle}>{rangeTitle[timeRange]}概览</Text>
-          <View className={styles.overviewGrid}>
-            <View className={styles.overviewItem}>
-              <Text className={styles.overviewValue}>
-                {(totalStats.distance / 1000).toFixed(2)}
-                <Text className={styles.overviewUnit}>km</Text>
-              </Text>
-              <Text className={styles.overviewLabel}>总距离</Text>
-            </View>
-            <View className={styles.overviewItem}>
-              <Text className={styles.overviewValue}>
-                {Math.round(totalStats.duration / 60)}
-                <Text className={styles.overviewUnit}>min</Text>
-              </Text>
-              <Text className={styles.overviewLabel}>总时长</Text>
-            </View>
-            <View className={styles.overviewItem}>
-              <Text className={styles.overviewValue}>
-                {Math.round(totalStats.calories)}
-                <Text className={styles.overviewUnit}>kcal</Text>
-              </Text>
-              <Text className={styles.overviewLabel}>总热量</Text>
-            </View>
-            <View className={styles.overviewItem}>
-              <Text className={styles.overviewValue}>
-                {totalStats.count}
-                <Text className={styles.overviewUnit}>次</Text>
-              </Text>
-              <Text className={styles.overviewLabel}>运动次数</Text>
-            </View>
+    <View className={styles.pageWrapper}>
+      <ScrollView className={styles.page} scrollY>
+        <View className={styles.header}>
+          <Text className={styles.title}>运动统计</Text>
+          <View className={styles.tabs}>
+            <Text 
+              className={classnames(styles.tab, timeRange === 'week' && styles.active)}
+              onClick={() => setTimeRange('week')}
+            >
+              周
+            </Text>
+            <Text 
+              className={classnames(styles.tab, timeRange === 'month' && styles.active)}
+              onClick={() => setTimeRange('month')}
+            >
+              月
+            </Text>
+            <Text 
+              className={classnames(styles.tab, timeRange === 'year' && styles.active)}
+              onClick={() => setTimeRange('year')}
+            >
+              年
+            </Text>
           </View>
         </View>
 
-        <View className={styles.chartSection}>
-          <SimpleChart 
-            title={`${rangeTitle[timeRange]}运动趋势`} 
-            data={chartData} 
-          />
-        </View>
-
-        <View className={styles.typeSection}>
-          <Text className={styles.sectionTitle}>运动类型分布</Text>
-          {typeStats.map(({ type, distance, percent }) => (
-            <View key={type} className={styles.typeItem}>
-              <View className={classnames(styles.typeIcon, styles[type])}>
-                <Text>{SportTypeIcon[type]}</Text>
+        <View className={styles.content}>
+          <View className={styles.overview}>
+            <Text className={styles.overviewTitle}>{rangeTitle[timeRange]}概览</Text>
+            <View className={styles.overviewGrid}>
+              <View className={styles.overviewItem}>
+                <Text className={styles.overviewValue}>
+                  {(totalStats.distance / 1000).toFixed(2)}
+                  <Text className={styles.overviewUnit}>km</Text>
+                </Text>
+                <Text className={styles.overviewLabel}>总距离</Text>
               </View>
-              <View className={styles.typeInfo}>
-                <Text className={styles.typeName}>{SportTypeLabel[type]}</Text>
-                <View className={styles.typeBar}>
-                  <View 
-                    className={classnames(styles.typeFill, styles[type])}
-                    style={{ width: `${percent}%` }}
-                  />
+              <View className={styles.overviewItem}>
+                <Text className={styles.overviewValue}>
+                  {Math.round(totalStats.duration / 60)}
+                  <Text className={styles.overviewUnit}>min</Text>
+                </Text>
+                <Text className={styles.overviewLabel}>总时长</Text>
+              </View>
+              <View className={styles.overviewItem}>
+                <Text className={styles.overviewValue}>
+                  {Math.round(totalStats.calories)}
+                  <Text className={styles.overviewUnit}>kcal</Text>
+                </Text>
+                <Text className={styles.overviewLabel}>总热量</Text>
+              </View>
+              <View className={styles.overviewItem}>
+                <Text className={styles.overviewValue}>
+                  {totalStats.count}
+                  <Text className={styles.overviewUnit}>次</Text>
+                </Text>
+                <Text className={styles.overviewLabel}>运动次数</Text>
+              </View>
+            </View>
+          </View>
+
+          <View className={styles.chartSection}>
+            <SimpleChart 
+              title={`${rangeTitle[timeRange]}运动趋势`} 
+              data={chartData} 
+            />
+          </View>
+
+          <View className={styles.typeSection}>
+            <Text className={styles.sectionTitle}>运动类型分布</Text>
+            {typeStats.map(({ type, distance, percent }) => (
+              <View key={type} className={styles.typeItem}>
+                <View className={classnames(styles.typeIcon, styles[type])}>
+                  <Text>{SportTypeIcon[type]}</Text>
+                </View>
+                <View className={styles.typeInfo}>
+                  <Text className={styles.typeName}>{SportTypeLabel[type]}</Text>
+                  <View className={styles.typeBar}>
+                    <View 
+                      className={classnames(styles.typeFill, styles[type])}
+                      style={{ width: `${percent}%` }}
+                    />
+                  </View>
+                </View>
+                <View className={styles.typeStats}>
+                  <Text className={styles.typeDistance}>{formatDistance(distance)}</Text>
+                  <Text className={styles.typePercent}>{percent}%</Text>
                 </View>
               </View>
-              <View className={styles.typeStats}>
-                <Text className={styles.typeDistance}>{formatDistance(distance)}</Text>
-                <Text className={styles.typePercent}>{percent}%</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        <View className={styles.recordsSection}>
-          <Text className={styles.sectionTitle}>运动记录</Text>
-          <View className={styles.filterTabs}>
-            <Text 
-              className={classnames(styles.filterTab, filterType === 'all' && styles.active)}
-              onClick={() => setFilterType('all')}
-            >
-              全部
-            </Text>
-            <Text 
-              className={classnames(styles.filterTab, filterType === 'run' && styles.active)}
-              onClick={() => setFilterType('run')}
-            >
-              跑步
-            </Text>
-            <Text 
-              className={classnames(styles.filterTab, filterType === 'ride' && styles.active)}
-              onClick={() => setFilterType('ride')}
-            >
-              骑行
-            </Text>
-            <Text 
-              className={classnames(styles.filterTab, filterType === 'walk' && styles.active)}
-              onClick={() => setFilterType('walk')}
-            >
-              步行
-            </Text>
+            ))}
           </View>
-          
-          {filteredRecords.length > 0 ? (
-            filteredRecords.map(record => (
-              <SportCard
-                key={record.id}
-                record={record}
-                onClick={() => handleViewDetail(record.id)}
-              />
-            ))
-          ) : (
-            <View className={styles.empty}>
-              <Text>暂无运动记录</Text>
+
+          <View className={styles.recordsSection}>
+            <Text className={styles.sectionTitle}>运动记录</Text>
+            <View className={styles.filterTabs}>
+              <Text 
+                className={classnames(styles.filterTab, filterType === 'all' && styles.active)}
+                onClick={() => setFilterType('all')}
+              >
+                全部
+              </Text>
+              <Text 
+                className={classnames(styles.filterTab, filterType === 'run' && styles.active)}
+                onClick={() => setFilterType('run')}
+              >
+                跑步
+              </Text>
+              <Text 
+                className={classnames(styles.filterTab, filterType === 'ride' && styles.active)}
+                onClick={() => setFilterType('ride')}
+              >
+                骑行
+              </Text>
+              <Text 
+                className={classnames(styles.filterTab, filterType === 'walk' && styles.active)}
+                onClick={() => setFilterType('walk')}
+              >
+                步行
+              </Text>
             </View>
-          )}
+            
+            {filteredRecords.length > 0 ? (
+              filteredRecords.map(record => (
+                <SportCard
+                  key={record.id}
+                  record={record}
+                  onClick={() => handleViewDetail(record.id)}
+                />
+              ))
+            ) : (
+              <View className={styles.empty}>
+                <Text>暂无运动记录</Text>
+              </View>
+            )}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      <TabBar current="stats" />
+    </View>
   );
 };
 

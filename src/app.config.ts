@@ -17,29 +17,5 @@ export default defineAppConfig({
     navigationBarTitleText: '运动记录',
     navigationBarTextStyle: 'black',
     backgroundColor: '#f5f6f7'
-  },
-  tabBar: {
-    color: '#86909c',
-    selectedColor: '#165dff',
-    backgroundColor: '#ffffff',
-    borderStyle: 'black',
-    list: [
-      {
-        pagePath: 'pages/home/index',
-        text: '首页'
-      },
-      {
-        pagePath: 'pages/sport/index',
-        text: '运动'
-      },
-      {
-        pagePath: 'pages/stats/index',
-        text: '统计'
-      },
-      {
-        pagePath: 'pages/mine/index',
-        text: '我的'
-      }
-    ]
   }
 })

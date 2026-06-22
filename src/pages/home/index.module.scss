@@ -1,9 +1,15 @@
 @use '@/styles/variables.scss' as *;
 
+.pageWrapper {
+  min-height: 100vh;
+  background: $color-bg-page;
+  position: relative;
+}
+
 .page {
   min-height: 100vh;
   background: $color-bg-page;
-  padding-bottom: 120rpx;
+  padding-bottom: 220rpx;
 }
 
 .header {

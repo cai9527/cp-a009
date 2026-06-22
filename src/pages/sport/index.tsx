@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import classnames from 'classnames';
 import { useAppStore } from '@/store/useAppStore';
 import SportTypeSelector from '@/components/SportTypeSelector';
+import TabBar from '@/components/TabBar';
 import { SportType, SportRecord, LocationPoint } from '@/types';
 import { 
   formatDistance, 
@@ -194,116 +195,122 @@ const SportPage: React.FC = () => {
 
   if (!isLogin) {
     return (
-      <View className={styles.page}>
-        <View className={styles.loginTip}>
-          <Text className={styles.loginTipText}>登录后才能记录您的运动数据</Text>
-          <Button className={styles.loginBtn} onClick={handleGoLogin}>
-            立即登录
-          </Button>
+      <View className={styles.pageWrapper}>
+        <View className={styles.page}>
+          <View className={styles.loginTip}>
+            <Text className={styles.loginTipText}>登录后才能记录您的运动数据</Text>
+            <Button className={styles.loginBtn} onClick={handleGoLogin}>
+              立即登录
+            </Button>
+          </View>
         </View>
+        <TabBar current="sport" />
       </View>
     );
   }
 
   return (
-    <View className={styles.page}>
-      <View className={styles.content}>
-        <View className={styles.typeSelector}>
-          <SportTypeSelector value={sportType} onChange={setSportType} />
-        </View>
+    <View className={styles.pageWrapper}>
+      <View className={styles.page}>
+        <View className={styles.content}>
+          <View className={styles.typeSelector}>
+            <SportTypeSelector value={sportType} onChange={setSportType} />
+          </View>
 
-        <View className={styles.dataPanel}>
-          {status === 'idle' ? (
-            <>
-              <View className={styles.mainData}>
-                <Text className={styles.mainLabel}>准备运动</Text>
-                <View className={styles.mainValue}>
-                  <Text>0.00</Text>
-                  <Text className={styles.unit}>km</Text>
+          <View className={styles.dataPanel}>
+            {status === 'idle' ? (
+              <>
+                <View className={styles.mainData}>
+                  <Text className={styles.mainLabel}>准备运动</Text>
+                  <View className={styles.mainValue}>
+                    <Text>0.00</Text>
+                    <Text className={styles.unit}>km</Text>
+                  </View>
                 </View>
-              </View>
-              <Text className={styles.idleTip}>选择运动类型，点击下方按钮开始</Text>
-            </>
-          ) : (
-            <>
-              <View className={styles.timeDisplay}>
-                <Text className={styles.time}>{formatDuration(duration)}</Text>
-              </View>
-              
-              <View className={styles.mainData}>
-                <Text className={styles.mainLabel}>运动距离</Text>
-                <View className={styles.mainValue}>
-                  <Text>{(distance / 1000).toFixed(2)}</Text>
-                  <Text className={styles.unit}>km</Text>
+                <Text className={styles.idleTip}>选择运动类型，点击下方按钮开始</Text>
+              </>
+            ) : (
+              <>
+                <View className={styles.timeDisplay}>
+                  <Text className={styles.time}>{formatDuration(duration)}</Text>
                 </View>
-              </View>
-              
-              <View className={styles.subData}>
-                <View className={styles.subItem}>
-                  <Text className={styles.subValue}>{formatPace(currentPace)}</Text>
-                  <Text className={styles.subLabel}>配速</Text>
+                
+                <View className={styles.mainData}>
+                  <Text className={styles.mainLabel}>运动距离</Text>
+                  <View className={styles.mainValue}>
+                    <Text>{(distance / 1000).toFixed(2)}</Text>
+                    <Text className={styles.unit}>km</Text>
+                  </View>
                 </View>
-                <View className={styles.subItem}>
-                  <Text className={styles.subValue}>{formatCalories(calories)}</Text>
-                  <Text className={styles.subLabel}>卡路里</Text>
+                
+                <View className={styles.subData}>
+                  <View className={styles.subItem}>
+                    <Text className={styles.subValue}>{formatPace(currentPace)}</Text>
+                    <Text className={styles.subLabel}>配速</Text>
+                  </View>
+                  <View className={styles.subItem}>
+                    <Text className={styles.subValue}>{formatCalories(calories)}</Text>
+                    <Text className={styles.subLabel}>卡路里</Text>
+                  </View>
+                  <View className={styles.subItem}>
+                    <Text className={styles.subValue}>{calculateAvgSpeed(distance, duration).toFixed(1)}</Text>
+                    <Text className={styles.subLabel}>km/h</Text>
+                  </View>
                 </View>
-                <View className={styles.subItem}>
-                  <Text className={styles.subValue}>{calculateAvgSpeed(distance, duration).toFixed(1)}</Text>
-                  <Text className={styles.subLabel}>km/h</Text>
-                </View>
-              </View>
-            </>
-          )}
-        </View>
+              </>
+            )}
+          </View>
 
-        <View className={styles.controls}>
-          {status === 'idle' ? (
-            <View className={styles.controlGroup}>
-              <Button 
-                className={classnames(styles.controlBtn, styles.start)} 
-                onClick={handleStart}
-              >
-                <Text>▶</Text>
-              </Button>
-              <Text className={styles.btnText}>开始运动</Text>
-            </View>
-          ) : (
-            <>
-              {status === 'running' ? (
-                <View className={styles.controlGroup}>
-                  <Button 
-                    className={classnames(styles.controlBtn, styles.pause)} 
-                    onClick={handlePause}
-                  >
-                    <Text>⏸</Text>
-                  </Button>
-                  <Text className={styles.btnText}>暂停</Text>
-                </View>
-              ) : (
-                <View className={styles.controlGroup}>
-                  <Button 
-                    className={classnames(styles.controlBtn, styles.resume)} 
-                    onClick={handleResume}
-                  >
-                    <Text>▶</Text>
-                  </Button>
-                  <Text className={styles.btnText}>继续</Text>
-                </View>
-              )}
-              
+          <View className={styles.controls}>
+            {status === 'idle' ? (
               <View className={styles.controlGroup}>
                 <Button 
-                  className={classnames(styles.controlBtn, styles.stop)} 
-                  onClick={handleStop}
+                  className={classnames(styles.controlBtn, styles.start)} 
+                  onClick={handleStart}
                 >
-                  <Text>■</Text>
+                  <Text>▶</Text>
                 </Button>
-                <Text className={styles.btnText}>结束</Text>
+                <Text className={styles.btnText}>开始运动</Text>
               </View>
-            </>
-          )}
+            ) : (
+              <>
+                {status === 'running' ? (
+                  <View className={styles.controlGroup}>
+                    <Button 
+                      className={classnames(styles.controlBtn, styles.pause)} 
+                      onClick={handlePause}
+                    >
+                      <Text>⏸</Text>
+                    </Button>
+                    <Text className={styles.btnText}>暂停</Text>
+                  </View>
+                ) : (
+                  <View className={styles.controlGroup}>
+                    <Button 
+                      className={classnames(styles.controlBtn, styles.resume)} 
+                      onClick={handleResume}
+                    >
+                      <Text>▶</Text>
+                    </Button>
+                    <Text className={styles.btnText}>继续</Text>
+                  </View>
+                )}
+                
+                <View className={styles.controlGroup}>
+                  <Button 
+                    className={classnames(styles.controlBtn, styles.stop)} 
+                    onClick={handleStop}
+                  >
+                    <Text>■</Text>
+                  </Button>
+                  <Text className={styles.btnText}>结束</Text>
+                </View>
+              </>
+            )}
+          </View>
         </View>
       </View>
+      <TabBar current="sport" />
     </View>
   );
 };

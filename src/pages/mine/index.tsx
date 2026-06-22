@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro';
 import classnames from 'classnames';
 import { useAppStore } from '@/store/useAppStore';
 import { mockSportRecords } from '@/data/mockSportRecords';
+import TabBar from '@/components/TabBar';
 import { 
   formatDistance, 
   formatDuration, 
@@ -133,103 +134,106 @@ const MinePage: React.FC = () => {
   };
 
   return (
-    <ScrollView className={styles.page} scrollY>
-      <View className={styles.header}>
-        {isLogin && user ? (
-          <View className={styles.userInfo}>
-            <View className={styles.avatar}>
-              {user.avatar ? (
-                <Image 
-                  src={user.avatar} 
-                  mode="aspectFill"
-                  onError={(e) => console.error('[Mine] 头像加载失败', e)}
-                />
-              ) : (
-                <Text>👤</Text>
-              )}
-            </View>
-            <View className={styles.userDetail}>
-              <View className={styles.nicknameRow}>
-                <Text className={styles.nickname}>{user.nickname}</Text>
+    <View className={styles.pageWrapper}>
+      <ScrollView className={styles.page} scrollY>
+        <View className={styles.header}>
+          {isLogin && user ? (
+            <View className={styles.userInfo}>
+              <View className={styles.avatar}>
+                {user.avatar ? (
+                  <Image 
+                    src={user.avatar} 
+                    mode="aspectFill"
+                    onError={(e) => console.error('[Mine] 头像加载失败', e)}
+                  />
+                ) : (
+                  <Text>👤</Text>
+                )}
+              </View>
+              <View className={styles.userDetail}>
+                <View className={styles.nicknameRow}>
+                  <Text className={styles.nickname}>{user.nickname}</Text>
+                  {user.loginType === 'wechat' && (
+                    <View className={styles.loginTypeBadge}>
+                      <Text>💬</Text>
+                      <Text>微信</Text>
+                    </View>
+                  )}
+                </View>
+                <View className={styles.userMeta}>
+                  <Text>📏 {user.height}cm</Text>
+                  <Text>⚖️ {user.weight}kg</Text>
+                </View>
                 {user.loginType === 'wechat' && (
-                  <View className={styles.loginTypeBadge}>
-                    <Text>💬</Text>
-                    <Text>微信</Text>
+                  <View className={styles.phoneInfo} onClick={handleBindPhone}>
+                    {user.phone ? (
+                      <Text>📱 已绑定：{user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</Text>
+                    ) : (
+                      <Text>📱 点击绑定手机号</Text>
+                    )}
                   </View>
                 )}
               </View>
-              <View className={styles.userMeta}>
-                <Text>📏 {user.height}cm</Text>
-                <Text>⚖️ {user.weight}kg</Text>
-              </View>
-              {user.loginType === 'wechat' && (
-                <View className={styles.phoneInfo} onClick={handleBindPhone}>
-                  {user.phone ? (
-                    <Text>📱 已绑定：{user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</Text>
-                  ) : (
-                    <Text>📱 点击绑定手机号</Text>
-                  )}
-                </View>
-              )}
             </View>
-          </View>
-        ) : (
-          <View className={styles.loginCard}>
-            <Text className={styles.loginTitle}>欢迎使用运动记录</Text>
-            <Text className={styles.loginDesc}>登录后同步您的运动数据，享受完整功能</Text>
-            <Button className={styles.loginBtn} onClick={handleGoLogin}>
-              立即登录
-            </Button>
-          </View>
-        )}
-      </View>
-
-      <View className={styles.content}>
-        {isLogin && (
-          <View className={styles.achievements}>
-            <Text className={styles.sectionTitle}>我的成就</Text>
-            <ScrollView className={styles.achievementScroll} scrollX>
-              {achievements.map((item, index) => (
-                <View key={index} className={styles.achievementCard}>
-                  <View className={styles.achievementIcon}>
-                    <Text>{item.icon}</Text>
-                  </View>
-                  <Text className={styles.achievementValue}>
-                    {item.value}
-                    <Text className={styles.achievementUnit}>{item.unit}</Text>
-                  </Text>
-                  <Text className={styles.achievementLabel}>{item.label}</Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        )}
-
-        <View className={styles.menu}>
-          {menuItems.map((item) => (
-            <View 
-              key={item.type} 
-              className={styles.menuItem}
-              onClick={() => handleMenuItem(item.type)}
-            >
-              <View className={classnames(styles.menuIcon, styles[item.type])}>
-                <Text>{item.icon}</Text>
-              </View>
-              <Text className={styles.menuText}>{item.text}</Text>
-              <Text className={styles.menuArrow}>›</Text>
+          ) : (
+            <View className={styles.loginCard}>
+              <Text className={styles.loginTitle}>欢迎使用运动记录</Text>
+              <Text className={styles.loginDesc}>登录后同步您的运动数据，享受完整功能</Text>
+              <Button className={styles.loginBtn} onClick={handleGoLogin}>
+                立即登录
+              </Button>
             </View>
-          ))}
+          )}
         </View>
 
-        {isLogin && (
-          <View className={styles.logoutSection}>
-            <Button className={styles.logoutBtn} onClick={handleLogout}>
-              退出登录
-            </Button>
+        <View className={styles.content}>
+          {isLogin && (
+            <View className={styles.achievements}>
+              <Text className={styles.sectionTitle}>我的成就</Text>
+              <ScrollView className={styles.achievementScroll} scrollX>
+                {achievements.map((item, index) => (
+                  <View key={index} className={styles.achievementCard}>
+                    <View className={styles.achievementIcon}>
+                      <Text>{item.icon}</Text>
+                    </View>
+                    <Text className={styles.achievementValue}>
+                      {item.value}
+                      <Text className={styles.achievementUnit}>{item.unit}</Text>
+                    </Text>
+                    <Text className={styles.achievementLabel}>{item.label}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          <View className={styles.menu}>
+            {menuItems.map((item) => (
+              <View 
+                key={item.type} 
+                className={styles.menuItem}
+                onClick={() => handleMenuItem(item.type)}
+              >
+                <View className={classnames(styles.menuIcon, styles[item.type])}>
+                  <Text>{item.icon}</Text>
+                </View>
+                <Text className={styles.menuText}>{item.text}</Text>
+                <Text className={styles.menuArrow}>›</Text>
+              </View>
+            ))}
           </View>
-        )}
-      </View>
-    </ScrollView>
+
+          {isLogin && (
+            <View className={styles.logoutSection}>
+              <Button className={styles.logoutBtn} onClick={handleLogout}>
+                退出登录
+              </Button>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+      <TabBar current="mine" />
+    </View>
   );
 };
 
