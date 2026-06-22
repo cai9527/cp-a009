@@ -37,3 +37,13 @@ $color-divider: #f2f3f5;
 // 渐变
 $gradient-primary: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
 $gradient-wechat: linear-gradient(135deg, $color-wechat 0%, $color-wechat-light 100%);
+$gradient-success: linear-gradient(135deg, $color-success 0%, #23c343 100%);
+$gradient-warning: linear-gradient(135deg, $color-warning 0%, #ff9a2e 100%);
+$gradient-info: linear-gradient(135deg, $color-info 0%, #4080ff 100%);
+$gradient-green: $gradient-success;
+$gradient-blue: $gradient-info;
+
+// 运动类型颜色
+$sport-color-run: #FF6B35;
+$sport-color-ride: #00D4FF;
+$sport-color-walk: #00B42A;
