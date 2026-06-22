@@ -22,6 +22,9 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     console.log('[Home] 页面加载');
+    
+    Taro.hideTabBar({ animation: false, fail: () => {} });
+    
     const hour = dayjs().hour();
     if (hour < 6) setGreeting('凌晨好');
     else if (hour < 12) setGreeting('早上好');

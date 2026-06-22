@@ -81,6 +81,10 @@ const SportPage: React.FC = () => {
     };
   }, [stopTimer]);
 
+  useEffect(() => {
+    Taro.hideTabBar({ animation: false, fail: () => {} });
+  }, []);
+
   const handleStart = () => {
     if (!isLogin) {
       Taro.showToast({ title: '请先登录', icon: 'none' });

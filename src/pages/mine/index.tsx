@@ -17,6 +17,9 @@ const MinePage: React.FC = () => {
 
   React.useEffect(() => {
     console.log('[Mine] 页面加载');
+    
+    Taro.hideTabBar({ animation: false, fail: () => {} });
+    
     if (sportRecords.length === 0) {
       setSportRecords(mockSportRecords);
     }

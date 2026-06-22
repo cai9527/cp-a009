@@ -25,7 +25,7 @@ const tabList: TabItem[] = [
     pagePath: '/pages/sport/index',
     text: '运动',
     icon: '🏃',
-    activeIcon: '🏃‍♂️'
+    activeIcon: '🏃'
   },
   {
     key: 'stats',
@@ -48,15 +48,26 @@ interface TabBarProps {
 }
 
 const TabBar: React.FC<TabBarProps> = ({ current }) => {
+  console.log('[TabBar] 渲染, current=', current, ', tab数量=', tabList.length);
+
   const handleTabClick = (tab: TabItem) => {
+    console.log('[TabBar] 点击 tab:', tab.key, ', 当前:', current);
+    
     if (tab.key === current) {
+      console.log('[TabBar] 已经是当前页面，忽略');
       return;
     }
     
-    console.log('[TabBar] 切换到', tab.key);
+    console.log('[TabBar] 切换到:', tab.key, ', URL:', tab.pagePath);
     
     Taro.switchTab({
       url: tab.pagePath,
+      success: () => {
+        console.log('[TabBar] 切换成功');
+        setTimeout(() => {
+          Taro.hideTabBar({ animation: false, fail: () => {} });
+        }, 50);
+      },
       fail: (err) => {
         console.error('[TabBar] 切换失败', err);
         Taro.showToast({
@@ -67,12 +78,19 @@ const TabBar: React.FC<TabBarProps> = ({ current }) => {
     });
   };
 
+  if (!tabList || tabList.length === 0) {
+    console.error('[TabBar] tabList 为空，无法渲染');
+    return null;
+  }
+
   return (
     <View className={styles.tabBar}>
       <View className={styles.tabBarBg} />
+      <View className={styles.tabBarBorder} />
       <View className={styles.tabBarContent}>
-        {tabList.map((tab) => {
+        {tabList.map((tab, index) => {
           const isActive = tab.key === current;
+          console.log('[TabBar] 渲染项:', index, tab.key, ', active=', isActive);
           return (
             <View
               key={tab.key}

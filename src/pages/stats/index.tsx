@@ -29,6 +29,9 @@ const StatsPage: React.FC = () => {
 
   React.useEffect(() => {
     console.log('[Stats] 页面加载');
+    
+    Taro.hideTabBar({ animation: false, fail: () => {} });
+    
     if (sportRecords.length === 0) {
       setSportRecords(mockSportRecords);
     }

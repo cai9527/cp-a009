@@ -5,7 +5,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  width: 100%;
+  z-index: 99999;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .tabBarBg {
@@ -14,30 +19,48 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: $color-bg-card;
-  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
-  border-top: 2rpx solid $color-border;
+  background: #ffffff;
+  box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.08);
+}
+
+.tabBarBorder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rpx;
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .tabBarContent {
   position: relative;
   display: flex;
-  align-items: stretch;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
   height: 110rpx;
-  padding: 0 $spacing-sm;
+  min-height: 110rpx;
+  padding: 0 8rpx;
+  box-sizing: border-box;
 }
 
 .tabItem {
   flex: 1;
+  flex-basis: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: all $transition-base;
+  padding: 8rpx 0;
+  transition: all 0.2s ease;
   position: relative;
+  box-sizing: border-box;
   
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
+    opacity: 0.85;
   }
 }
 
@@ -46,20 +69,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   height: 56rpx;
-  margin-bottom: $spacing-xs;
+  margin-bottom: 4rpx;
 }
 
 .tabIcon {
   font-size: 44rpx;
   line-height: 1;
-  transition: all $transition-base;
-  filter: grayscale(30%);
-  opacity: 0.7;
+  text-align: center;
+  transition: all 0.2s ease;
+  display: block;
+  -webkit-filter: grayscale(0%);
+  filter: grayscale(0%);
+  opacity: 0.55;
 }
 
 .activeIcon {
-  font-size: 48rpx;
+  font-size: 52rpx;
+  -webkit-filter: grayscale(0%);
   filter: grayscale(0%);
   opacity: 1;
   transform: translateY(-4rpx);
@@ -67,15 +95,15 @@
 
 .activeDot {
   position: absolute;
-  bottom: -4rpx;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 32rpx;
   height: 6rpx;
   border-radius: 3rpx;
-  background: $gradient-primary;
-  box-shadow: 0 2rpx 8rpx rgba($color-primary, 0.4);
-  animation: dotSlide 0.3s ease-out;
+  background: linear-gradient(90deg, #165dff 0%, #4080ff 100%);
+  box-shadow: 0 2rpx 8rpx rgba(22, 93, 255, 0.35);
+  animation: dotSlide 0.25s ease-out;
 }
 
 @keyframes dotSlide {
@@ -90,17 +118,19 @@
 }
 
 .tabText {
-  font-size: $font-size-xs;
-  color: $color-text-tertiary;
-  font-weight: $font-weight-medium;
-  transition: all $transition-base;
+  font-size: 20rpx;
+  color: #86909c;
+  font-weight: 500;
+  transition: all 0.2s ease;
   line-height: 1;
+  text-align: center;
+  display: block;
 }
 
 .activeText {
-  font-size: $font-size-sm;
-  color: $color-primary;
-  font-weight: $font-weight-semibold;
+  font-size: 22rpx;
+  color: #165dff;
+  font-weight: 600;
   transform: translateY(-2rpx);
 }
 
@@ -115,7 +145,7 @@
     transform: scale(1) translateY(0);
   }
   50% {
-    transform: scale(1.2) translateY(-8rpx);
+    transform: scale(1.15) translateY(-8rpx);
   }
   100% {
     transform: scale(1) translateY(-4rpx);
@@ -124,5 +154,7 @@
 
 .safeArea {
   height: env(safe-area-inset-bottom);
-  background: $color-bg-card;
+  min-height: 0;
+  background: #ffffff;
+  width: 100%;
 }
