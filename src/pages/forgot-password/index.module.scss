@@ -1,0 +1,384 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: 0 $page-padding $spacing-xxl;
+  position: relative;
+}
+
+.navBar {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  padding-top: $spacing-sm;
+  
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.backIcon {
+  font-size: 48rpx;
+  color: $color-text-primary;
+  font-weight: $font-weight-bold;
+}
+
+.header {
+  margin-bottom: $spacing-xl;
+  padding-top: $spacing-sm;
+}
+
+.title {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  line-height: $line-height-normal;
+}
+
+.form {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  box-shadow: $shadow-card;
+}
+
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-xl;
+  padding: $spacing-md 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.stepCircle {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+  background: $color-bg-hover;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-xs;
+  transition: all $transition-base;
+}
+
+.stepText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  transition: all $transition-base;
+}
+
+.step.active {
+  .stepCircle {
+    background: $gradient-primary;
+    color: $color-text-white;
+    box-shadow: 0 4rpx 12rpx rgba($color-primary, 0.3);
+  }
+  
+  .stepText {
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.step.completed {
+  .stepCircle {
+    background: $color-success;
+    color: $color-text-white;
+  }
+  
+  .stepText {
+    color: $color-success;
+  }
+}
+
+.stepLine {
+  flex: 1;
+  height: 4rpx;
+  background: $color-border;
+  margin: 0 $spacing-sm;
+  margin-bottom: $spacing-lg;
+  border-radius: $radius-xs;
+}
+
+.formItem {
+  margin-bottom: $spacing-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: $color-bg-hover;
+  border-radius: $radius-lg;
+  padding: 0 $spacing-md;
+  height: 96rpx;
+  line-height: 96rpx;
+  border: 2rpx solid transparent;
+  transition: all $transition-base;
+  position: relative;
+  
+  &.focused {
+    border-color: $color-primary;
+    background: $color-bg-card;
+  }
+}
+
+.inputIcon {
+  font-size: 36rpx;
+  margin-right: $spacing-sm;
+  flex-shrink: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.input {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.placeholder {
+  color: $color-text-tertiary;
+}
+
+.codeBtn {
+  @include button-reset;
+  padding: 0 $spacing-md;
+  height: 64rpx;
+  line-height: 64rpx;
+  background: $color-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:active {
+    opacity: 0.9;
+  }
+  
+  &.disabled {
+    background: $color-text-disabled;
+  }
+}
+
+.passwordToggle {
+  width: 64rpx;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all $transition-base;
+  user-select: none;
+  font-size: 32rpx;
+  
+  &:active {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  
+  .icon {
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.phoneInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-lg;
+}
+
+.phoneLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.phoneNumber {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.passwordHint {
+  margin-top: -$spacing-md;
+  margin-bottom: $spacing-md;
+  padding-left: $spacing-sm;
+}
+
+.hintText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.passwordError {
+  margin-top: -$spacing-md;
+  margin-bottom: $spacing-md;
+  padding-left: $spacing-sm;
+}
+
+.errorText {
+  font-size: $font-size-xs;
+  color: $color-error;
+}
+
+.submitBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-top: $spacing-xl;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+  
+  &.disabled {
+    background: $color-text-disabled;
+    box-shadow: none;
+  }
+  
+  &.loading {
+    opacity: 0.7;
+  }
+}
+
+.btnGroup {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-xl;
+}
+
+.backBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-lg;
+  background: $color-bg-hover;
+  border-radius: $radius-button;
+  color: $color-text-secondary;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: $spacing-lg;
+}
+
+.link {
+  color: $color-primary;
+  font-size: $font-size-sm;
+}
+
+.successContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.successIcon {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: $radius-round;
+  background: linear-gradient(135deg, rgba($color-success, 0.1) 0%, rgba($color-success, 0.2) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80rpx;
+  margin-bottom: $spacing-xl;
+}
+
+.successTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.successDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xxl;
+  text-align: center;
+  line-height: $line-height-normal;
+}
+
+.successBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}

@@ -59,6 +59,11 @@ const LoginPage: React.FC = () => {
     Taro.navigateTo({ url: '/pages/register/index' });
   };
 
+  const handleGoForgotPassword = () => {
+    console.log('[Login] 跳转到忘记密码');
+    Taro.navigateTo({ url: '/pages/forgot-password/index' });
+  };
+
   const handleQuickLogin = (type: string) => {
     console.log('[Login] 快捷登录', type);
     Taro.showToast({ title: `${type}登录开发中`, icon: 'none' });
@@ -134,7 +139,7 @@ const LoginPage: React.FC = () => {
           <Text className={styles.link} onClick={handleGoRegister}>
             注册账号
           </Text>
-          <Text className={styles.link}>忘记密码？</Text>
+          <Text className={styles.link} onClick={handleGoForgotPassword}>忘记密码？</Text>
         </View>
       </View>
 

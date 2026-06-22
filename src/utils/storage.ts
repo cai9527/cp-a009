@@ -1,10 +1,12 @@
 import Taro from '@tarojs/taro';
+import { ResetTokenData } from '@/types';
 
 const STORAGE_KEYS = {
   USER: 'sport_user',
   TOKEN: 'sport_token',
   RECORDS: 'sport_records',
-  TARGET: 'sport_target'
+  TARGET: 'sport_target',
+  RESET_TOKEN: 'sport_reset_token'
 };
 
 export const storage = {
@@ -76,6 +78,45 @@ export const storage = {
     } catch (e) {
       console.error('[Storage] 获取目标失败', e);
       return null;
+    }
+  },
+
+  setResetToken: (token: ResetTokenData) => {
+    try {
+      Taro.setStorageSync(STORAGE_KEYS.RESET_TOKEN, JSON.stringify(token));
+    } catch (e) {
+      console.error('[Storage] 保存重置令牌失败', e);
+    }
+  },
+
+  getResetToken: (): ResetTokenData | null => {
+    try {
+      const data = Taro.getStorageSync(STORAGE_KEYS.RESET_TOKEN);
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      console.error('[Storage] 获取重置令牌失败', e);
+      return null;
+    }
+  },
+
+  markResetTokenUsed: () => {
+    try {
+      const token = Taro.getStorageSync(STORAGE_KEYS.RESET_TOKEN);
+      if (token) {
+        const parsed = JSON.parse(token);
+        parsed.used = true;
+        Taro.setStorageSync(STORAGE_KEYS.RESET_TOKEN, JSON.stringify(parsed));
+      }
+    } catch (e) {
+      console.error('[Storage] 标记重置令牌已使用失败', e);
+    }
+  },
+
+  removeResetToken: () => {
+    try {
+      Taro.removeStorageSync(STORAGE_KEYS.RESET_TOKEN);
+    } catch (e) {
+      console.error('[Storage] 删除重置令牌失败', e);
     }
   },
   

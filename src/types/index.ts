@@ -60,6 +60,22 @@ export interface RegisterForm {
   confirmPassword: string;
 }
 
+export interface ForgotPasswordForm {
+  phone: string;
+  code: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ResetTokenData {
+  phone: string;
+  code: string;
+  expiresAt: number;
+  used: boolean;
+}
+
+export type ResetPasswordStep = 'verify' | 'reset' | 'success';
+
 export const SportTypeLabel: Record<SportType, string> = {
   run: '跑步',
   ride: '骑行',
