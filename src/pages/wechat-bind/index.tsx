@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Input, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
@@ -6,13 +6,20 @@ import { useAppStore } from '@/store/useAppStore';
 import styles from './index.module.scss';
 
 const WechatBindPage: React.FC = () => {
-  const { user, bindWechatPhone, sendResetCode } = useAppStore();
+  const { user, isLogin, bindWechatPhone, sendResetCode, logout } = useAppStore();
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [codeCountdown, setCodeCountdown] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!isLogin || !user) {
+      console.log('[WechatBind] 用户未登录，返回登录页');
+      Taro.redirectTo({ url: '/pages/login/index' });
+    }
+  }, [isLogin, user]);
 
   const canBind = phone && code && /^1\d{10}$/.test(phone) && code.length === 6;
 
@@ -96,11 +103,26 @@ const WechatBindPage: React.FC = () => {
     Taro.switchTab({ url: '/pages/home/index' });
   };
 
-  if (!user) {
+  const handleBackToLogin = () => {
+    console.log('[WechatBind] 返回登录页');
+    Taro.showModal({
+      title: '提示',
+      content: '返回将退出当前微信账号，是否继续？',
+      success: (res) => {
+        if (res.confirm) {
+          console.log('[WechatBind] 确认返回，退出登录');
+          logout();
+          Taro.redirectTo({ url: '/pages/login/index' });
+        }
+      }
+    });
+  };
+
+  if (!isLogin || !user) {
     return (
       <View className={styles.page}>
         <View className={styles.header}>
-          <Text className={styles.title}>请先登录</Text>
+          <Text className={styles.title}>正在跳转...</Text>
         </View>
       </View>
     );
@@ -194,6 +216,10 @@ const WechatBindPage: React.FC = () => {
       >
         跳过绑定
       </Button>
+
+      <View className={styles.backToLogin} onClick={handleBackToLogin}>
+        <Text className={styles.backToLoginText}>返回登录页</Text>
+      </View>
 
       <View className={styles.tip}>
         <Text>绑定即表示同意</Text>

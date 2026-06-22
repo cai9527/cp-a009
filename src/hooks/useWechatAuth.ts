@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Taro from '@tarojs/taro';
 import { wechatService } from '@/services/wechat';
 import { useAppStore } from '@/store/useAppStore';
@@ -16,6 +16,7 @@ interface UseWechatAuthReturn {
   isNewUser: boolean;
   wechatLogin: () => Promise<boolean>;
   reset: () => void;
+  cancel: () => void;
 }
 
 export const useWechatAuth = (): UseWechatAuthReturn => {
@@ -27,6 +28,9 @@ export const useWechatAuth = (): UseWechatAuthReturn => {
   const [wechatUserInfo, setWechatUserInfo] = useState<WechatUserInfo | null>(null);
   const [isNewUser, setIsNewUser] = useState(false);
 
+  const cancelledRef = useRef(false);
+  const navigatedRef = useRef(false);
+
   const isLoading = step !== 'idle' && step !== 'success' && step !== 'error';
 
   const reset = useCallback(() => {
@@ -36,30 +40,44 @@ export const useWechatAuth = (): UseWechatAuthReturn => {
     setAuthResult(null);
     setWechatUserInfo(null);
     setIsNewUser(false);
+    cancelledRef.current = false;
+    navigatedRef.current = false;
   }, []);
+
+  const cancel = useCallback(() => {
+    console.log('[WechatAuth] 用户取消微信登录');
+    cancelledRef.current = true;
+    reset();
+  }, [reset]);
 
   const wechatLogin = useCallback(async (): Promise<boolean> => {
     console.log('[WechatAuth] 开始微信登录流程');
     reset();
+    cancelledRef.current = false;
+    navigatedRef.current = false;
     
     try {
       setStep('authorizing');
       const codeData = await wechatService.getLoginCode();
+      if (cancelledRef.current) return false;
       setLoginData(codeData);
       console.log('[WechatAuth] Step 1 - 获取授权码成功');
 
       setStep('exchanging');
       const tokenResult = await wechatService.exchangeCodeForToken(codeData);
+      if (cancelledRef.current) return false;
       setAuthResult(tokenResult);
       console.log('[WechatAuth] Step 2 - 交换Token成功', { openid: tokenResult.openid });
 
       setStep('fetching_user');
       const userInfo = await wechatService.getUserInfo(tokenResult);
+      if (cancelledRef.current) return false;
       setWechatUserInfo(userInfo);
       console.log('[WechatAuth] Step 3 - 获取用户信息成功', { nickname: userInfo.nickname });
 
       setStep('logging_in');
       const loginResult = await wechatService.loginOrRegister(tokenResult, userInfo);
+      if (cancelledRef.current) return false;
       setIsNewUser(loginResult.isNewUser);
       
       const systemUser: UserInfo = {
@@ -85,6 +103,7 @@ export const useWechatAuth = (): UseWechatAuthReturn => {
       
       return true;
     } catch (err) {
+      if (cancelledRef.current) return false;
       console.error('[WechatAuth] 微信登录失败', err);
       const errorMessage = err instanceof Error ? err.message : '登录失败，请重试';
       setError(errorMessage);
@@ -102,7 +121,8 @@ export const useWechatAuth = (): UseWechatAuthReturn => {
   useEffect(() => {
     return () => {
       if (isLoading) {
-        console.log('[WechatAuth] 组件卸载，重置登录状态');
+        console.log('[WechatAuth] 组件卸载，取消并重置登录状态');
+        cancelledRef.current = true;
         reset();
       }
     };
@@ -117,6 +137,7 @@ export const useWechatAuth = (): UseWechatAuthReturn => {
     wechatUserInfo,
     isNewUser,
     wechatLogin,
-    reset
+    reset,
+    cancel
   };
 };

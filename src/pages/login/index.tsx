@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, Input } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
@@ -9,24 +9,38 @@ import { useWechatAuth } from '@/hooks/useWechatAuth';
 import styles from './index.module.scss';
 
 const LoginPage: React.FC = () => {
-  const { login, wechatLogin } = useAppStore();
-  const { step, isLoading, wechatLogin: startWechatAuth, isNewUser } = useWechatAuth();
+  const { login } = useAppStore();
+  const { step, isLoading, error, wechatLogin: startWechatAuth, isNewUser, cancel, reset } = useWechatAuth();
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const navigatedRef = useRef(false);
 
   useEffect(() => {
-    if (step === 'success') {
+    if (step === 'success' && !navigatedRef.current) {
+      navigatedRef.current = true;
       setTimeout(() => {
-        if (isNewUser && !phone) {
+        if (isNewUser) {
           Taro.navigateTo({ url: '/pages/wechat-bind/index' });
         } else {
           Taro.switchTab({ url: '/pages/home/index' });
         }
       }, 1000);
     }
-  }, [step, isNewUser, phone]);
+  }, [step, isNewUser]);
+
+  useEffect(() => {
+    if (step === 'idle' || step === 'error') {
+      navigatedRef.current = false;
+    }
+  }, [step]);
+
+  useEffect(() => {
+    return () => {
+      navigatedRef.current = false;
+    };
+  }, []);
 
   const handleLogin = () => {
     console.log('[Login] 尝试登录', phone);
@@ -84,6 +98,11 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  const handleCancelWechat = () => {
+    console.log('[Login] 取消微信登录');
+    cancel();
+  };
+
   const handleGoRegister = () => {
     Taro.navigateTo({ url: '/pages/register/index' });
   };
@@ -134,6 +153,18 @@ const LoginPage: React.FC = () => {
         <View className={styles.authStatus}>
           <Text className={styles.loadingIcon}>⏳</Text>
           <Text className={styles.statusText}>{getStatusText()}</Text>
+          <View className={styles.cancelBtn} onClick={handleCancelWechat}>
+            <Text className={styles.cancelBtnText}>取消</Text>
+          </View>
+        </View>
+      )}
+
+      {step === 'error' && error && (
+        <View className={styles.errorStatus}>
+          <Text className={styles.errorText}>❌ {error}</Text>
+          <View className={styles.retryBtn} onClick={handleWechatLogin}>
+            <Text className={styles.retryBtnText}>重试</Text>
+          </View>
         </View>
       )}
 
