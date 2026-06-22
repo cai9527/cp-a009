@@ -8,6 +8,8 @@ import { generateId } from '@/utils/sport';
 import { useWechatAuth } from '@/hooks/useWechatAuth';
 import styles from './index.module.scss';
 
+type LoginMode = 'phone' | 'wechat';
+
 const LoginPage: React.FC = () => {
   const { login } = useAppStore();
   const { step, isLoading, error, wechatLogin: startWechatAuth, isNewUser, cancel, reset } = useWechatAuth();
@@ -15,6 +17,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [loginMode, setLoginMode] = useState<LoginMode>('phone');
   const navigatedRef = useRef(false);
 
   useEffect(() => {
@@ -112,19 +115,16 @@ const LoginPage: React.FC = () => {
     Taro.navigateTo({ url: '/pages/forgot-password/index' });
   };
 
-  const handleQuickLogin = async (type: string) => {
-    console.log('[Login] 快捷登录', type);
-    
-    if (type === '微信') {
-      await handleWechatLogin();
-    } else {
-      Taro.showToast({ title: `${type}登录开发中`, icon: 'none' });
-    }
-  };
-
   const handleTogglePassword = () => {
     console.log('[Login] 切换密码显示', !showPassword);
     setShowPassword(!showPassword);
+  };
+
+  const handleSwitchMode = (mode: LoginMode) => {
+    if (isLoading) return;
+    console.log('[Login] 切换登录模式', mode);
+    setLoginMode(mode);
+    reset();
   };
 
   const getStatusText = () => {
@@ -168,95 +168,114 @@ const LoginPage: React.FC = () => {
         </View>
       )}
 
-      <View className={styles.form}>
-        <View className={styles.formItem}>
-          <Text className={styles.label}>手机号</Text>
-          <View className={classnames(styles.inputWrapper, focusedField === 'phone' && styles.focused)}>
-            <Text className={styles.inputIcon}>📱</Text>
-            <Input
-              className={styles.input}
-              type="number"
-              placeholder="请输入手机号"
-              placeholderClass={styles.input}
-              value={phone}
-              onInput={(e) => setPhone(e.detail.value)}
-              onFocus={() => setFocusedField('phone')}
-              onBlur={() => setFocusedField(null)}
-              maxlength={11}
-              disabled={isLoading}
-            />
-          </View>
-        </View>
-
-        <View className={styles.formItem}>
-          <Text className={styles.label}>密码</Text>
-          <View className={classnames(styles.inputWrapper, focusedField === 'password' && styles.focused)}>
-            <Text className={styles.inputIcon}>🔒</Text>
-            <Input
-              className={styles.input}
-              password={!showPassword}
-              placeholder="请输入密码"
-              placeholderClass={styles.input}
-              value={password}
-              onInput={(e) => setPassword(e.detail.value)}
-              onFocus={() => setFocusedField('password')}
-              onBlur={() => setFocusedField(null)}
-              disabled={isLoading}
-            />
-            <View className={styles.passwordToggle} onClick={handleTogglePassword}>
-              <Text className={styles.icon}>
-                {showPassword ? '🙈' : '👁️'}
-              </Text>
+      {loginMode === 'phone' ? (
+        <View className={styles.form}>
+          <View className={styles.formItem}>
+            <Text className={styles.label}>手机号</Text>
+            <View className={classnames(styles.inputWrapper, focusedField === 'phone' && styles.focused)}>
+              <Text className={styles.inputIcon}>📱</Text>
+              <Input
+                className={styles.input}
+                type="number"
+                placeholder="请输入手机号"
+                placeholderClass={styles.input}
+                value={phone}
+                onInput={(e) => setPhone(e.detail.value)}
+                onFocus={() => setFocusedField('phone')}
+                onBlur={() => setFocusedField(null)}
+                maxlength={11}
+                disabled={isLoading}
+              />
             </View>
           </View>
-        </View>
 
-        <Button
-          className={classnames(styles.loginBtn, !canLogin && styles.disabled)}
-          onClick={handleLogin}
-          disabled={!canLogin || isLoading}
-        >
-          登录
-        </Button>
+          <View className={styles.formItem}>
+            <Text className={styles.label}>密码</Text>
+            <View className={classnames(styles.inputWrapper, focusedField === 'password' && styles.focused)}>
+              <Text className={styles.inputIcon}>🔒</Text>
+              <Input
+                className={styles.input}
+                password={!showPassword}
+                placeholder="请输入密码"
+                placeholderClass={styles.input}
+                value={password}
+                onInput={(e) => setPassword(e.detail.value)}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
+                disabled={isLoading}
+              />
+              <View className={styles.passwordToggle} onClick={handleTogglePassword}>
+                <Text className={styles.icon}>
+                  {showPassword ? '🙈' : '👁️'}
+                </Text>
+              </View>
+            </View>
+          </View>
 
-        <View className={styles.wechatLoginSection}>
           <Button
-            className={classnames(styles.wechatLoginBtn, isLoading && styles.loading)}
-            onClick={handleWechatLogin}
-            disabled={isLoading}
+            className={classnames(styles.loginBtn, !canLogin && styles.disabled)}
+            onClick={handleLogin}
+            disabled={!canLogin || isLoading}
           >
-            <Text className={styles.icon}>💬</Text>
-            <Text>微信一键登录</Text>
+            登录
           </Button>
-          <Text className={styles.wechatLoginTip}>
-            首次登录需绑定手机号，已绑定账号可直接登录
-          </Text>
-        </View>
 
-        <View className={styles.footer}>
-          <Text className={styles.link} onClick={handleGoRegister}>
-            注册账号
-          </Text>
-          <Text className={styles.link} onClick={handleGoForgotPassword}>忘记密码？</Text>
+          <View className={styles.footer}>
+            <Text className={styles.link} onClick={handleGoRegister}>
+              注册账号
+            </Text>
+            <Text className={styles.link} onClick={handleGoForgotPassword}>忘记密码？</Text>
+          </View>
         </View>
-      </View>
+      ) : (
+        <View className={styles.form}>
+          <View className={styles.wechatLoginSection}>
+            <View className={styles.wechatLoginHeader}>
+              <View className={styles.wechatLoginIcon}>
+                <Text>💬</Text>
+              </View>
+              <Text className={styles.wechatLoginTitle}>微信快捷登录</Text>
+              <Text className={styles.wechatLoginDesc}>
+                使用微信账号安全登录，无需输入密码
+              </Text>
+            </View>
+            <Button
+              className={classnames(styles.wechatLoginBtn, isLoading && styles.loading)}
+              onClick={handleWechatLogin}
+              disabled={isLoading}
+            >
+              <Text className={styles.icon}>💬</Text>
+              <Text>微信一键登录</Text>
+            </Button>
+            <Text className={styles.wechatLoginTip}>
+              首次登录需绑定手机号，已绑定账号可直接登录
+            </Text>
+          </View>
+        </View>
+      )}
 
-      <View className={styles.divider}>
-        <Text className={styles.text}>其他登录方式</Text>
-      </View>
-
-      <View className={styles.quickLogin}>
-        <View 
-          className={classnames(styles.quickLoginBtn, styles.wechat)} 
-          onClick={() => handleQuickLogin('微信')}
-        >
-          <Text>💬</Text>
+      <View className={styles.switchModule}>
+        <View className={styles.switchLabel}>
+          <Text className={styles.switchLabelText}>登录方式</Text>
         </View>
-        <View className={styles.quickLoginBtn} onClick={() => handleQuickLogin('QQ')}>
-          <Text>🐧</Text>
+        <View className={styles.switchTabs}>
+          <View
+            className={classnames(styles.switchTab, loginMode === 'phone' && styles.active)}
+            onClick={() => handleSwitchMode('phone')}
+          >
+            <Text className={styles.switchTabIcon}>📱</Text>
+            <Text className={styles.switchTabText}>手机号登录</Text>
+          </View>
+          <View
+            className={classnames(styles.switchTab, loginMode === 'wechat' && styles.active)}
+            onClick={() => handleSwitchMode('wechat')}
+          >
+            <Text className={styles.switchTabIcon}>💬</Text>
+            <Text className={styles.switchTabText}>微信登录</Text>
+          </View>
         </View>
-        <View className={styles.quickLoginBtn} onClick={() => handleQuickLogin('手机')}>
-          <Text>📱</Text>
+        <View className={styles.switchIndicator}>
+          <View className={classnames(styles.indicator, styles[loginMode])} />
         </View>
       </View>
 

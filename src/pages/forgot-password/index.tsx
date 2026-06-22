@@ -6,6 +6,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { storage } from '@/utils/storage';
 import { ResetPasswordStep } from '@/types';
 import { validatePassword, validatePasswordMatch, PASSWORD_MIN_LENGTH } from '@/utils/password';
+import BackButton from '@/components/BackButton';
 import styles from './index.module.scss';
 
 const ForgotPasswordPage: React.FC = () => {
@@ -437,9 +438,7 @@ const ForgotPasswordPage: React.FC = () => {
   return (
     <View className={styles.page}>
       {currentStep !== 'success' && (
-        <View className={styles.navBar} onClick={handleGoBack}>
-          <Text className={styles.backIcon}>←</Text>
-        </View>
+        <BackButton onCustomBack={handleGoBack} />
       )}
 
       {currentStep === 'verify' && renderVerifyStep()}

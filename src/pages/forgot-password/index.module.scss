@@ -4,24 +4,8 @@
   min-height: 100vh;
   background: $color-bg-page;
   padding: 0 $page-padding $spacing-xxl;
+  padding-top: 88rpx + $spacing-lg;
   position: relative;
-}
-
-.navBar {
-  height: 88rpx;
-  display: flex;
-  align-items: center;
-  padding-top: $spacing-sm;
-  
-  &:active {
-    opacity: 0.7;
-  }
-}
-
-.backIcon {
-  font-size: 48rpx;
-  color: $color-text-primary;
-  font-weight: $font-weight-bold;
 }
 
 .header {

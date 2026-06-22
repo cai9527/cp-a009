@@ -3,6 +3,7 @@ import { View, Text, Button, Input, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
 import { useAppStore } from '@/store/useAppStore';
+import BackButton from '@/components/BackButton';
 import styles from './index.module.scss';
 
 const WechatBindPage: React.FC = () => {
@@ -130,6 +131,7 @@ const WechatBindPage: React.FC = () => {
 
   return (
     <View className={styles.page}>
+      <BackButton onCustomBack={handleBackToLogin} />
       <View className={styles.header}>
         <View className={styles.wechatIcon}>
           <Text>💬</Text>

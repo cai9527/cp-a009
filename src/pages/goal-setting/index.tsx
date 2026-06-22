@@ -3,6 +3,7 @@ import { View, Text, Button, Slider, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
 import { useAppStore } from '@/store/useAppStore';
+import BackButton from '@/components/BackButton';
 import styles from './index.module.scss';
 
 const GoalSettingPage: React.FC = () => {
@@ -60,6 +61,7 @@ const GoalSettingPage: React.FC = () => {
 
   return (
     <ScrollView className={styles.page} scrollY>
+      <BackButton />
       <View className={styles.content}>
         <View className={styles.tip}>
           <Text className={styles.tipTitle}>💡 小提示</Text>

@@ -12,6 +12,7 @@ import {
   formatSpeed
 } from '@/utils/sport';
 import dayjs from 'dayjs';
+import BackButton from '@/components/BackButton';
 import styles from './index.module.scss';
 
 const SportDetailPage: React.FC = () => {
@@ -66,6 +67,7 @@ const SportDetailPage: React.FC = () => {
 
   return (
     <ScrollView className={styles.page} scrollY>
+      <BackButton />
       <View className={styles.header}>
         <View className={styles.typeInfo}>
           <View className={styles.typeIcon}>

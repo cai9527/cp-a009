@@ -6,6 +6,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { mockUser } from '@/data/mockUser';
 import { generateId } from '@/utils/sport';
 import { validatePassword, validatePasswordMatch, PASSWORD_MIN_LENGTH } from '@/utils/password';
+import BackButton from '@/components/BackButton';
 import styles from './index.module.scss';
 
 const RegisterPage: React.FC = () => {
@@ -182,6 +183,7 @@ const RegisterPage: React.FC = () => {
 
   return (
     <View className={styles.page}>
+      <BackButton />
       <Text className={styles.title}>创建账号</Text>
       <Text className={styles.subtitle}>加入我们，开始您的运动之旅</Text>
 
