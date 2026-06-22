@@ -1,5 +1,34 @@
 export type SportType = 'run' | 'ride' | 'walk';
 
+export type LoginType = 'phone' | 'wechat';
+
+export interface WechatUserInfo {
+  openid: string;
+  unionid?: string;
+  nickname: string;
+  headimgurl: string;
+  sex: number;
+  province: string;
+  city: string;
+  country: string;
+  language: string;
+}
+
+export interface WechatAuthResult {
+  accessToken: string;
+  expiresIn: number;
+  refreshToken: string;
+  openid: string;
+  scope: string;
+  unionid?: string;
+  userInfo?: WechatUserInfo;
+}
+
+export interface WechatLoginData {
+  code: string;
+  state: string;
+}
+
 export interface UserInfo {
   id: string;
   phone: string;
@@ -8,6 +37,9 @@ export interface UserInfo {
   height: number;
   weight: number;
   createTime: string;
+  loginType?: LoginType;
+  openid?: string;
+  unionid?: string;
 }
 
 export interface SportTarget {

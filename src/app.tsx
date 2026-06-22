@@ -1,24 +1,17 @@
 import React, { useEffect } from 'react';
 import { useDidShow, useDidHide } from '@tarojs/taro';
-import { useAppStore } from '@/store/useAppStore';
 // 全局样式
 import './app.scss';
 
 function App(props) {
-  const { init } = useAppStore();
-  
-  useEffect(() => {
-    console.log('[App] 应用启动，初始化存储');
-    init();
-  }, [init]);
+  // 可以使用所有的 React Hooks
+  useEffect(() => {});
 
-  useDidShow(() => {
-    console.log('[App] 应用显示');
-  });
+  // 对应 onShow
+  useDidShow(() => {});
 
-  useDidHide(() => {
-    console.log('[App] 应用隐藏');
-  });
+  // 对应 onHide
+  useDidHide(() => {});
 
   return props.children;
 }

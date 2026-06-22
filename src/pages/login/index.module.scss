@@ -203,6 +203,80 @@
   &:active {
     transform: scale(0.95);
   }
+  
+  &.wechat {
+    background: $color-wechat;
+    color: #fff;
+    
+    &:active {
+      background: $color-wechat-dark;
+    }
+  }
+}
+
+.wechatLoginSection {
+  margin-top: $spacing-lg;
+}
+
+.wechatLoginBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $color-wechat;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  transition: all $transition-base;
+  
+  .icon {
+    font-size: 40rpx;
+  }
+  
+  &:active {
+    background: $color-wechat-dark;
+    transform: scale(0.98);
+  }
+  
+  &.loading {
+    opacity: 0.8;
+    pointer-events: none;
+  }
+}
+
+.wechatLoginTip {
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-md;
+}
+
+.authStatus {
+  text-align: center;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  
+  .statusText {
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+    margin-top: $spacing-sm;
+  }
+  
+  .loadingIcon {
+    font-size: 48rpx;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .tip {

@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Input } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
 import { useAppStore } from '@/store/useAppStore';
 import { mockUser } from '@/data/mockUser';
 import { generateId } from '@/utils/sport';
+import { useWechatAuth } from '@/hooks/useWechatAuth';
 import styles from './index.module.scss';
 
 const LoginPage: React.FC = () => {
-  const { login } = useAppStore();
+  const { login, wechatLogin } = useAppStore();
+  const { step, isLoading, wechatLogin: startWechatAuth, isNewUser } = useWechatAuth();
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (step === 'success') {
+      setTimeout(() => {
+        if (isNewUser && !phone) {
+          Taro.navigateTo({ url: '/pages/wechat-bind/index' });
+        } else {
+          Taro.switchTab({ url: '/pages/home/index' });
+        }
+      }, 1000);
+    }
+  }, [step, isNewUser, phone]);
 
   const handleLogin = () => {
     console.log('[Login] 尝试登录', phone);
@@ -42,7 +56,8 @@ const LoginPage: React.FC = () => {
       ...mockUser,
       id: generateId(),
       phone,
-      nickname: `用户${phone.slice(-4)}`
+      nickname: `用户${phone.slice(-4)}`,
+      loginType: 'phone' as const
     };
     
     console.log('[Login] 登录成功', user);
@@ -55,6 +70,20 @@ const LoginPage: React.FC = () => {
     }, 1000);
   };
 
+  const handleWechatLogin = async () => {
+    console.log('[Login] 开始微信登录');
+    
+    try {
+      const success = await startWechatAuth();
+      
+      if (success) {
+        console.log('[Login] 微信登录成功');
+      }
+    } catch (error) {
+      console.error('[Login] 微信登录失败', error);
+    }
+  };
+
   const handleGoRegister = () => {
     Taro.navigateTo({ url: '/pages/register/index' });
   };
@@ -64,14 +93,29 @@ const LoginPage: React.FC = () => {
     Taro.navigateTo({ url: '/pages/forgot-password/index' });
   };
 
-  const handleQuickLogin = (type: string) => {
+  const handleQuickLogin = async (type: string) => {
     console.log('[Login] 快捷登录', type);
-    Taro.showToast({ title: `${type}登录开发中`, icon: 'none' });
+    
+    if (type === '微信') {
+      await handleWechatLogin();
+    } else {
+      Taro.showToast({ title: `${type}登录开发中`, icon: 'none' });
+    }
   };
 
   const handleTogglePassword = () => {
     console.log('[Login] 切换密码显示', !showPassword);
     setShowPassword(!showPassword);
+  };
+
+  const getStatusText = () => {
+    switch (step) {
+      case 'authorizing': return '正在获取微信授权...';
+      case 'exchanging': return '正在验证身份...';
+      case 'fetching_user': return '正在获取用户信息...';
+      case 'logging_in': return '正在登录...';
+      default: return '';
+    }
   };
 
   const canLogin = phone && password && password.length >= 6;
@@ -85,6 +129,13 @@ const LoginPage: React.FC = () => {
         <Text className={styles.appName}>运动记录</Text>
         <Text className={styles.appDesc}>记录每一次运动，遇见更好的自己</Text>
       </View>
+
+      {isLoading && (
+        <View className={styles.authStatus}>
+          <Text className={styles.loadingIcon}>⏳</Text>
+          <Text className={styles.statusText}>{getStatusText()}</Text>
+        </View>
+      )}
 
       <View className={styles.form}>
         <View className={styles.formItem}>
@@ -101,6 +152,7 @@ const LoginPage: React.FC = () => {
               onFocus={() => setFocusedField('phone')}
               onBlur={() => setFocusedField(null)}
               maxlength={11}
+              disabled={isLoading}
             />
           </View>
         </View>
@@ -118,6 +170,7 @@ const LoginPage: React.FC = () => {
               onInput={(e) => setPassword(e.detail.value)}
               onFocus={() => setFocusedField('password')}
               onBlur={() => setFocusedField(null)}
+              disabled={isLoading}
             />
             <View className={styles.passwordToggle} onClick={handleTogglePassword}>
               <Text className={styles.icon}>
@@ -130,10 +183,24 @@ const LoginPage: React.FC = () => {
         <Button
           className={classnames(styles.loginBtn, !canLogin && styles.disabled)}
           onClick={handleLogin}
-          disabled={!canLogin}
+          disabled={!canLogin || isLoading}
         >
           登录
         </Button>
+
+        <View className={styles.wechatLoginSection}>
+          <Button
+            className={classnames(styles.wechatLoginBtn, isLoading && styles.loading)}
+            onClick={handleWechatLogin}
+            disabled={isLoading}
+          >
+            <Text className={styles.icon}>💬</Text>
+            <Text>微信一键登录</Text>
+          </Button>
+          <Text className={styles.wechatLoginTip}>
+            首次登录需绑定手机号，已绑定账号可直接登录
+          </Text>
+        </View>
 
         <View className={styles.footer}>
           <Text className={styles.link} onClick={handleGoRegister}>
@@ -148,7 +215,10 @@ const LoginPage: React.FC = () => {
       </View>
 
       <View className={styles.quickLogin}>
-        <View className={styles.quickLoginBtn} onClick={() => handleQuickLogin('微信')}>
+        <View 
+          className={classnames(styles.quickLoginBtn, styles.wechat)} 
+          onClick={() => handleQuickLogin('微信')}
+        >
           <Text>💬</Text>
         </View>
         <View className={styles.quickLoginBtn} onClick={() => handleQuickLogin('QQ')}>

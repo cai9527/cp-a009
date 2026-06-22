@@ -1,5 +1,6 @@
 export default defineAppConfig({
   pages: [
+    'pages/index/index',
     'pages/home/index',
     'pages/sport/index',
     'pages/stats/index',
@@ -7,6 +8,7 @@ export default defineAppConfig({
     'pages/login/index',
     'pages/register/index',
     'pages/forgot-password/index',
+    'pages/wechat-bind/index',
     'pages/sport-detail/index',
     'pages/goal-setting/index'
   ],
@@ -15,11 +17,11 @@ export default defineAppConfig({
     navigationBarBackgroundColor: '#ffffff',
     navigationBarTitleText: '运动记录',
     navigationBarTextStyle: 'black',
-    backgroundColor: '#F7F8FA'
+    backgroundColor: '#f5f6f7'
   },
   tabBar: {
-    color: '#86909C',
-    selectedColor: '#FF6B35',
+    color: '#86909c',
+    selectedColor: '#165dff',
     backgroundColor: '#ffffff',
     borderStyle: 'black',
     list: [

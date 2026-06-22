@@ -126,6 +126,12 @@ const MinePage: React.FC = () => {
     { type: 'about', icon: 'ℹ️', text: '关于' }
   ];
 
+  const handleBindPhone = () => {
+    if (user?.loginType === 'wechat' && !user.phone) {
+      Taro.navigateTo({ url: '/pages/wechat-bind/index' });
+    }
+  };
+
   return (
     <ScrollView className={styles.page} scrollY>
       <View className={styles.header}>
@@ -133,17 +139,38 @@ const MinePage: React.FC = () => {
           <View className={styles.userInfo}>
             <View className={styles.avatar}>
               {user.avatar ? (
-                <Image src={user.avatar} mode="aspectFill" />
+                <Image 
+                  src={user.avatar} 
+                  mode="aspectFill"
+                  onError={(e) => console.error('[Mine] 头像加载失败', e)}
+                />
               ) : (
                 <Text>👤</Text>
               )}
             </View>
             <View className={styles.userDetail}>
-              <Text className={styles.nickname}>{user.nickname}</Text>
+              <View className={styles.nicknameRow}>
+                <Text className={styles.nickname}>{user.nickname}</Text>
+                {user.loginType === 'wechat' && (
+                  <View className={styles.loginTypeBadge}>
+                    <Text>💬</Text>
+                    <Text>微信</Text>
+                  </View>
+                )}
+              </View>
               <View className={styles.userMeta}>
                 <Text>📏 {user.height}cm</Text>
                 <Text>⚖️ {user.weight}kg</Text>
               </View>
+              {user.loginType === 'wechat' && (
+                <View className={styles.phoneInfo} onClick={handleBindPhone}>
+                  {user.phone ? (
+                    <Text>📱 已绑定：{user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</Text>
+                  ) : (
+                    <Text>📱 点击绑定手机号</Text>
+                  )}
+                </View>
+              )}
             </View>
           </View>
         ) : (

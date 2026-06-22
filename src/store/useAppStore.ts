@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import { UserInfo, SportRecord, SportTarget, ResetTokenData } from '@/types';
+import { UserInfo, SportRecord, SportTarget, ResetTokenData, WechatAuthResult, WechatUserInfo } from '@/types';
 import { storage } from '@/utils/storage';
 import { validatePassword } from '@/utils/password';
+import { wechatService } from '@/services/wechat';
 
 interface AppState {
   user: UserInfo | null;
@@ -9,12 +10,16 @@ interface AppState {
   sportRecords: SportRecord[];
   target: SportTarget;
   isLogin: boolean;
+  wechatAuth: WechatAuthResult | null;
   
   init: () => void;
   setUser: (user: UserInfo | null) => void;
   setToken: (token: string | null) => void;
   login: (user: UserInfo, token: string) => void;
   logout: () => void;
+  wechatLogin: () => Promise<{ success: boolean; isNewUser?: boolean }>;
+  bindWechatPhone: (phone: string, code: string) => Promise<boolean>;
+  checkWechatSession: () => Promise<boolean>;
   addSportRecord: (record: SportRecord) => void;
   deleteSportRecord: (id: string) => void;
   setSportRecords: (records: SportRecord[]) => void;
@@ -36,6 +41,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     weeklyDistance: 25
   },
   isLogin: false,
+  wechatAuth: null,
 
   init: () => {
     console.log('[Store] 初始化，从本地存储加载数据');
@@ -81,7 +87,84 @@ export const useAppStore = create<AppState>((set, get) => ({
   logout: () => {
     console.log('[Auth] 用户登出');
     storage.clear();
-    set({ user: null, token: null, isLogin: false });
+    set({ user: null, token: null, isLogin: false, wechatAuth: null });
+  },
+
+  wechatLogin: async () => {
+    console.log('[Auth] 开始微信登录');
+    
+    try {
+      const loginData = await wechatService.getLoginCode();
+      console.log('[Auth] Step 1 - 获取授权码成功');
+
+      const authResult = await wechatService.exchangeCodeForToken(loginData);
+      set({ wechatAuth: authResult });
+      console.log('[Auth] Step 2 - 交换Token成功');
+
+      const wechatUserInfo = await wechatService.getUserInfo(authResult);
+      console.log('[Auth] Step 3 - 获取用户信息成功');
+
+      const loginResult = await wechatService.loginOrRegister(authResult, wechatUserInfo);
+      
+      const systemUser: UserInfo = {
+        ...loginResult.user,
+        loginType: 'wechat',
+        openid: wechatUserInfo.openid,
+        unionid: wechatUserInfo.unionid
+      };
+      
+      get().login(systemUser, loginResult.token);
+      
+      console.log('[Auth] Step 4 - 系统登录成功', { 
+        userId: systemUser.id, 
+        isNewUser: loginResult.isNewUser 
+      });
+      
+      return { success: true, isNewUser: loginResult.isNewUser };
+    } catch (error) {
+      console.error('[Auth] 微信登录失败', error);
+      return { success: false };
+    }
+  },
+
+  bindWechatPhone: async (phone, code) => {
+    console.log('[Auth] 绑定微信手机号', { phone });
+    
+    const currentUser = get().user;
+    if (!currentUser || !currentUser.openid) {
+      console.warn('[Auth] 未找到微信用户信息');
+      return false;
+    }
+    
+    try {
+      const success = await wechatService.bindPhone(currentUser.openid, phone, code);
+      
+      if (success) {
+        const updatedUser = { ...currentUser, phone };
+        get().setUser(updatedUser);
+        console.log('[Auth] 手机号绑定成功');
+      }
+      
+      return success;
+    } catch (error) {
+      console.error('[Auth] 绑定手机号失败', error);
+      return false;
+    }
+  },
+
+  checkWechatSession: async () => {
+    console.log('[Auth] 检查微信会话');
+    const isValid = await wechatService.checkWechatSession();
+    
+    if (!isValid) {
+      console.warn('[Auth] 微信会话已过期');
+      const currentUser = get().user;
+      if (currentUser?.loginType === 'wechat') {
+        get().logout();
+      }
+    }
+    
+    return isValid;
   },
   
   addSportRecord: (record) => {

@@ -1,0 +1,267 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-xl $page-padding;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: $spacing-xl;
+  padding-top: $spacing-lg;
+}
+
+.wechatIcon {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: $radius-round;
+  background: $color-wechat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  margin: 0 auto $spacing-md;
+  box-shadow: 0 4rpx 16rpx rgba($color-wechat, 0.3);
+}
+
+.title {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.userInfoCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: $radius-round;
+  flex-shrink: 0;
+  background: $color-bg-hover;
+}
+
+.userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.nickname {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+  @include text-ellipsis;
+}
+
+.loginType {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-wechat;
+  background: rgba($color-wechat, 0.1);
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+}
+
+.form {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-lg;
+}
+
+.formItem {
+  margin-bottom: $spacing-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  background: $color-bg-hover;
+  border-radius: $radius-lg;
+  padding: 0 $spacing-md;
+  height: 96rpx;
+  border: 2rpx solid transparent;
+  transition: all $transition-base;
+  
+  &.focused {
+    border-color: $color-primary;
+    background: $color-bg-card;
+  }
+}
+
+.inputIcon {
+  font-size: 36rpx;
+  margin-right: $spacing-sm;
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  background: transparent;
+}
+
+.codeBtn {
+  @include button-reset;
+  padding: 0 $spacing-md;
+  height: 64rpx;
+  background: $color-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+  transition: all $transition-base;
+  
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.95);
+  }
+  
+  &.disabled {
+    background: $color-text-disabled;
+  }
+}
+
+.bindBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+  transition: all $transition-base;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+  
+  &.disabled {
+    background: $color-text-disabled;
+    box-shadow: none;
+  }
+}
+
+.skipBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-md;
+  background: transparent;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+  margin-top: $spacing-md;
+  transition: all $transition-base;
+  
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.tip {
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xl;
+  line-height: 1.6;
+  
+  .highlight {
+    color: $color-primary;
+  }
+}
+
+.successModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.successContent {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin: 0 $spacing-xl;
+  text-align: center;
+  box-shadow: $shadow-popup;
+}
+
+.successIcon {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: $radius-round;
+  background: $color-success;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  margin: 0 auto $spacing-md;
+}
+
+.successTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.successDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xl;
+}
+
+.successBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-md;
+  background: $color-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
