@@ -12,6 +12,7 @@ const LoginPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
     console.log('[Login] 尝试登录', phone);
@@ -63,6 +64,11 @@ const LoginPage: React.FC = () => {
     Taro.showToast({ title: `${type}登录开发中`, icon: 'none' });
   };
 
+  const handleTogglePassword = () => {
+    console.log('[Login] 切换密码显示', !showPassword);
+    setShowPassword(!showPassword);
+  };
+
   const canLogin = phone && password && password.length >= 6;
 
   return (
@@ -100,7 +106,7 @@ const LoginPage: React.FC = () => {
             <Text className={styles.inputIcon}>🔒</Text>
             <Input
               className={styles.input}
-              password
+              password={!showPassword}
               placeholder="请输入密码"
               placeholderClass={styles.input}
               value={password}
@@ -108,6 +114,11 @@ const LoginPage: React.FC = () => {
               onFocus={() => setFocusedField('password')}
               onBlur={() => setFocusedField(null)}
             />
+            <View className={styles.passwordToggle} onClick={handleTogglePassword}>
+              <Text className={styles.icon}>
+                {showPassword ? '🙈' : '👁️'}
+              </Text>
+            </View>
           </View>
         </View>
 

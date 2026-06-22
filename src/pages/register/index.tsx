@@ -15,6 +15,8 @@ const RegisterPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSendCode = () => {
     if (!phone) {
@@ -103,6 +105,16 @@ const RegisterPage: React.FC = () => {
     Taro.navigateBack();
   };
 
+  const handleTogglePassword = () => {
+    console.log('[Register] 切换密码显示', !showPassword);
+    setShowPassword(!showPassword);
+  };
+
+  const handleToggleConfirmPassword = () => {
+    console.log('[Register] 切换确认密码显示', !showConfirmPassword);
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const canRegister = phone && code && password && confirmPassword && password === confirmPassword && password.length >= 6;
 
   return (
@@ -160,7 +172,7 @@ const RegisterPage: React.FC = () => {
             <Text className={styles.inputIcon}>🔒</Text>
             <Input
               className={styles.input}
-              password
+              password={!showPassword}
               placeholder="请输入密码（至少6位）"
               placeholderClass={styles.input}
               value={password}
@@ -168,6 +180,11 @@ const RegisterPage: React.FC = () => {
               onFocus={() => setFocusedField('password')}
               onBlur={() => setFocusedField(null)}
             />
+            <View className={styles.passwordToggle} onClick={handleTogglePassword}>
+              <Text className={styles.icon}>
+                {showPassword ? '🙈' : '👁️'}
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -177,7 +194,7 @@ const RegisterPage: React.FC = () => {
             <Text className={styles.inputIcon}>🔒</Text>
             <Input
               className={styles.input}
-              password
+              password={!showConfirmPassword}
               placeholder="请再次输入密码"
               placeholderClass={styles.input}
               value={confirmPassword}
@@ -185,6 +202,11 @@ const RegisterPage: React.FC = () => {
               onFocus={() => setFocusedField('confirm')}
               onBlur={() => setFocusedField(null)}
             />
+            <View className={styles.passwordToggle} onClick={handleToggleConfirmPassword}>
+              <Text className={styles.icon}>
+                {showConfirmPassword ? '🙈' : '👁️'}
+              </Text>
+            </View>
           </View>
         </View>
 
