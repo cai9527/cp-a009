@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import styles from './index.module.scss';
 
 const SportDetailPage: React.FC = () => {
-  const { sportRecords, setSportRecords } = useAppStore();
+  const { sportRecords, setSportRecords, deleteSportRecord } = useAppStore();
 
   const recordId = useMemo(() => {
     const pages = Taro.getCurrentPages();
@@ -42,6 +42,7 @@ const SportDetailPage: React.FC = () => {
       success: (res) => {
         if (res.confirm) {
           console.log('[SportDetail] 删除运动记录', record.id);
+          deleteSportRecord(record.id);
           Taro.showToast({ title: '已删除', icon: 'success' });
           setTimeout(() => {
             Taro.navigateBack();

@@ -15,6 +15,7 @@ interface AppState {
   login: (user: UserInfo, token: string) => void;
   logout: () => void;
   addSportRecord: (record: SportRecord) => void;
+  deleteSportRecord: (id: string) => void;
   setSportRecords: (records: SportRecord[]) => void;
   updateTarget: (target: Partial<SportTarget>) => void;
 }
@@ -82,6 +83,15 @@ export const useAppStore = create<AppState>((set, get) => ({
     console.log('[Sport] 添加运动记录', record.id);
     set((state) => {
       const newRecords = [record, ...state.sportRecords];
+      storage.setRecords(newRecords);
+      return { sportRecords: newRecords };
+    });
+  },
+  
+  deleteSportRecord: (id) => {
+    console.log('[Sport] 删除运动记录', id);
+    set((state) => {
+      const newRecords = state.sportRecords.filter(r => r.id !== id);
       storage.setRecords(newRecords);
       return { sportRecords: newRecords };
     });

@@ -126,7 +126,7 @@
 
 .achievementScroll {
   @include scroll-x-container;
-  margin: 0 -$spacing-lg;
+  margin: 0 (-$spacing-lg);
   padding: 0 $spacing-lg;
 }
 
