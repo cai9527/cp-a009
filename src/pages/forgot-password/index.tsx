@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, Button, Input } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
 import { useAppStore } from '@/store/useAppStore';
 import { storage } from '@/utils/storage';
 import { ResetPasswordStep } from '@/types';
+import { validatePassword, validatePasswordMatch, PASSWORD_MIN_LENGTH } from '@/utils/password';
 import styles from './index.module.scss';
 
 const ForgotPasswordPage: React.FC = () => {
@@ -20,6 +21,9 @@ const ForgotPasswordPage: React.FC = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const passwordValidation = useMemo(() => validatePassword(newPassword), [newPassword]);
+  const confirmError = useMemo(() => validatePasswordMatch(newPassword, confirmPassword), [newPassword, confirmPassword]);
 
   const handleSendCode = useCallback(async () => {
     if (!phone) {
@@ -112,23 +116,13 @@ const ForgotPasswordPage: React.FC = () => {
   }, [phone, code, verifyResetCode]);
 
   const handleResetPassword = useCallback(async () => {
-    if (!newPassword) {
-      Taro.showToast({ title: '请输入新密码', icon: 'none' });
+    if (!passwordValidation.isValid) {
+      Taro.showToast({ title: passwordValidation.errors[0] || '请输入有效的密码', icon: 'none' });
       return;
     }
     
-    if (newPassword.length < 6) {
-      Taro.showToast({ title: '密码至少6位', icon: 'none' });
-      return;
-    }
-    
-    if (!confirmPassword) {
-      Taro.showToast({ title: '请确认新密码', icon: 'none' });
-      return;
-    }
-    
-    if (newPassword !== confirmPassword) {
-      Taro.showToast({ title: '两次密码不一致', icon: 'none' });
+    if (confirmError) {
+      Taro.showToast({ title: confirmError, icon: 'none' });
       return;
     }
     
@@ -148,7 +142,7 @@ const ForgotPasswordPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [phone, code, newPassword, confirmPassword, resetPassword]);
+  }, [phone, code, newPassword, passwordValidation, confirmError, resetPassword]);
 
   const handleGoLogin = useCallback(() => {
     storage.removeResetToken();
@@ -171,8 +165,72 @@ const ForgotPasswordPage: React.FC = () => {
     setShowConfirmPassword(!showConfirmPassword);
   }, [showConfirmPassword]);
 
-  const canVerify = phone && code && code.length === 6 && !loading;
-  const canReset = newPassword && confirmPassword && newPassword === confirmPassword && newPassword.length >= 6 && !loading;
+  const canVerify = phone && /^1\d{10}$/.test(phone) && code && code.length === 6 && !loading;
+  const canReset = passwordValidation.isValid && !confirmError && !loading;
+
+  const renderStrengthBar = () => {
+    const segments = [0, 1, 2];
+    const activeCount = passwordValidation.strength === 'strong' ? 3 
+      : passwordValidation.strength === 'medium' ? 2 
+      : newPassword ? 1 : 0;
+    
+    const strengthLabel = passwordValidation.strength === 'strong' ? '强'
+      : passwordValidation.strength === 'medium' ? '中'
+      : newPassword ? '弱' : '';
+    
+    return (
+      <View className={styles.passwordStrength}>
+        <View className={styles.strengthLabel}>
+          <Text className={styles.strengthText}>密码强度</Text>
+          {newPassword && (
+            <Text className={classnames(styles.strengthValue, styles[passwordValidation.strength])}>
+              {strengthLabel}
+            </Text>
+          )}
+        </View>
+        <View className={styles.strengthBar}>
+          {segments.map((i) => (
+            <View
+              key={i}
+              className={classnames(
+                styles.strengthSegment,
+                i < activeCount && styles.active,
+                i < activeCount && styles[passwordValidation.strength]
+              )}
+            />
+          ))}
+        </View>
+      </View>
+    );
+  };
+
+  const renderPasswordChecks = () => {
+    if (!newPassword) return null;
+    
+    const checks = [
+      { key: 'length', label: `至少${PASSWORD_MIN_LENGTH}位字符`, pass: passwordValidation.checks.length },
+      { key: 'hasLowerCase', label: '包含小写字母', pass: passwordValidation.checks.hasLowerCase },
+      { key: 'hasUpperCase', label: '包含大写字母', pass: passwordValidation.checks.hasUpperCase },
+      { key: 'hasNumber', label: '包含数字', pass: passwordValidation.checks.hasNumber },
+      { key: 'hasSpecialChar', label: '包含特殊符号', pass: passwordValidation.checks.hasSpecialChar },
+      { key: 'varietyCount', label: '至少满足以上两种类型', pass: passwordValidation.checks.varietyCount }
+    ];
+    
+    return (
+      <View className={styles.passwordChecks}>
+        {checks.map((check) => (
+          <View key={check.key} className={styles.checkItem}>
+            <View className={classnames(styles.checkIcon, check.pass ? styles.pass : styles.fail)}>
+              {check.pass ? '✓' : '○'}
+            </View>
+            <Text className={classnames(styles.checkText, check.pass ? styles.pass : styles.fail)}>
+              {check.label}
+            </Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
 
   const renderVerifyStep = () => (
     <>
@@ -220,7 +278,7 @@ const ForgotPasswordPage: React.FC = () => {
 
         <View className={styles.formItem}>
           <Text className={styles.label}>验证码</Text>
-          <View className={classnames(styles.inputWrapper, focusedField === 'code' && styles.focused)}>
+          <View className={classnames(styles.codeInputWrapper, focusedField === 'code' && styles.focused)}>
             <Text className={styles.inputIcon}>🔐</Text>
             <Input
               className={styles.input}
@@ -265,7 +323,7 @@ const ForgotPasswordPage: React.FC = () => {
     <>
       <View className={styles.header}>
         <Text className={styles.title}>设置新密码</Text>
-        <Text className={styles.subtitle}>请设置您的新密码，密码长度至少6位</Text>
+        <Text className={styles.subtitle}>请设置您的新密码，密码长度至少{PASSWORD_MIN_LENGTH}位</Text>
       </View>
 
       <View className={styles.form}>
@@ -298,7 +356,7 @@ const ForgotPasswordPage: React.FC = () => {
             <Input
               className={styles.input}
               password={!showNewPassword}
-              placeholder="请输入新密码（至少6位）"
+              placeholder={`请输入新密码（至少${PASSWORD_MIN_LENGTH}位）`}
               placeholderClass={styles.placeholder}
               value={newPassword}
               onInput={(e) => setNewPassword(e.detail.value)}
@@ -313,6 +371,9 @@ const ForgotPasswordPage: React.FC = () => {
             </View>
           </View>
         </View>
+
+        {renderStrengthBar()}
+        {renderPasswordChecks()}
 
         <View className={styles.formItem}>
           <Text className={styles.label}>确认新密码</Text>
@@ -337,15 +398,9 @@ const ForgotPasswordPage: React.FC = () => {
           </View>
         </View>
 
-        {newPassword && newPassword.length < 6 && (
-          <View className={styles.passwordHint}>
-            <Text className={styles.hintText}>密码长度至少6位</Text>
-          </View>
-        )}
-        
-        {newPassword && confirmPassword && newPassword !== confirmPassword && (
+        {confirmError && (
           <View className={styles.passwordError}>
-            <Text className={styles.errorText}>两次输入的密码不一致</Text>
+            <Text className={styles.errorText}>{confirmError}</Text>
           </View>
         )}
 

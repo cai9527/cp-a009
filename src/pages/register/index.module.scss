@@ -53,6 +53,28 @@
   border: 2rpx solid transparent;
   transition: all $transition-base;
   position: relative;
+  overflow: visible;
+  
+  &.focused {
+    border-color: $color-primary;
+    background: $color-bg-card;
+  }
+}
+
+.codeInputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: $color-bg-hover;
+  border-radius: $radius-lg;
+  padding: 0 $spacing-md;
+  height: 96rpx;
+  line-height: 96rpx;
+  border: 2rpx solid transparent;
+  transition: all $transition-base;
+  position: relative;
+  overflow: visible;
+  gap: $spacing-sm;
   
   &.focused {
     border-color: $color-primary;
@@ -165,4 +187,126 @@
 .link {
   color: $color-primary;
   font-size: $font-size-sm;
+}
+
+.passwordStrength {
+  margin-top: -$spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.strengthLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+}
+
+.strengthText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.strengthValue {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  
+  &.weak {
+    color: $color-error;
+  }
+  
+  &.medium {
+    color: $color-warning;
+  }
+  
+  &.strong {
+    color: $color-success;
+  }
+}
+
+.strengthBar {
+  display: flex;
+  gap: $spacing-xs;
+  height: 8rpx;
+}
+
+.strengthSegment {
+  flex: 1;
+  background: $color-border;
+  border-radius: $radius-xs;
+  transition: all $transition-base;
+  
+  &.active.weak {
+    background: $color-error;
+  }
+  
+  &.active.medium {
+    background: $color-warning;
+  }
+  
+  &.active.strong {
+    background: $color-success;
+  }
+}
+
+.passwordChecks {
+  margin-top: $spacing-sm;
+  margin-bottom: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-hover;
+  border-radius: $radius-lg;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.checkIcon {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  margin-right: $spacing-sm;
+  flex-shrink: 0;
+  
+  &.pass {
+    background: rgba($color-success, 0.15);
+    color: $color-success;
+  }
+  
+  &.fail {
+    background: rgba($color-text-tertiary, 0.1);
+    color: $color-text-tertiary;
+  }
+}
+
+.checkText {
+  font-size: $font-size-xs;
+  
+  &.pass {
+    color: $color-text-secondary;
+  }
+  
+  &.fail {
+    color: $color-text-tertiary;
+  }
+}
+
+.passwordError {
+  margin-top: -$spacing-md;
+  margin-bottom: $spacing-md;
+  padding-left: $spacing-sm;
+}
+
+.errorText {
+  font-size: $font-size-xs;
+  color: $color-error;
 }

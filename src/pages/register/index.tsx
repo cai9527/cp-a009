@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, Button, Input } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
 import { useAppStore } from '@/store/useAppStore';
 import { mockUser } from '@/data/mockUser';
 import { generateId } from '@/utils/sport';
+import { validatePassword, validatePasswordMatch, PASSWORD_MIN_LENGTH } from '@/utils/password';
 import styles from './index.module.scss';
 
 const RegisterPage: React.FC = () => {
@@ -17,6 +18,9 @@ const RegisterPage: React.FC = () => {
   const [countdown, setCountdown] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const passwordValidation = useMemo(() => validatePassword(password), [password]);
+  const confirmError = useMemo(() => validatePasswordMatch(password, confirmPassword), [password, confirmPassword]);
 
   const handleSendCode = () => {
     if (!phone) {
@@ -63,23 +67,18 @@ const RegisterPage: React.FC = () => {
       return;
     }
     
-    if (code.length < 4) {
-      Taro.showToast({ title: '请输入正确的验证码', icon: 'none' });
+    if (code.length < 6) {
+      Taro.showToast({ title: '请输入6位验证码', icon: 'none' });
       return;
     }
     
-    if (!password) {
-      Taro.showToast({ title: '请输入密码', icon: 'none' });
+    if (!passwordValidation.isValid) {
+      Taro.showToast({ title: passwordValidation.errors[0] || '请输入有效的密码', icon: 'none' });
       return;
     }
     
-    if (password.length < 6) {
-      Taro.showToast({ title: '密码至少6位', icon: 'none' });
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      Taro.showToast({ title: '两次密码不一致', icon: 'none' });
+    if (confirmError) {
+      Taro.showToast({ title: confirmError, icon: 'none' });
       return;
     }
 
@@ -115,7 +114,71 @@ const RegisterPage: React.FC = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const canRegister = phone && code && password && confirmPassword && password === confirmPassword && password.length >= 6;
+  const canRegister = phone && /^1\d{10}$/.test(phone) && code && code.length === 6 && passwordValidation.isValid && !confirmError;
+
+  const renderStrengthBar = () => {
+    const segments = [0, 1, 2];
+    const activeCount = passwordValidation.strength === 'strong' ? 3 
+      : passwordValidation.strength === 'medium' ? 2 
+      : password ? 1 : 0;
+    
+    const strengthLabel = passwordValidation.strength === 'strong' ? '强'
+      : passwordValidation.strength === 'medium' ? '中'
+      : password ? '弱' : '';
+    
+    return (
+      <View className={styles.passwordStrength}>
+        <View className={styles.strengthLabel}>
+          <Text className={styles.strengthText}>密码强度</Text>
+          {password && (
+            <Text className={classnames(styles.strengthValue, styles[passwordValidation.strength])}>
+              {strengthLabel}
+            </Text>
+          )}
+        </View>
+        <View className={styles.strengthBar}>
+          {segments.map((i) => (
+            <View
+              key={i}
+              className={classnames(
+                styles.strengthSegment,
+                i < activeCount && styles.active,
+                i < activeCount && styles[passwordValidation.strength]
+              )}
+            />
+          ))}
+        </View>
+      </View>
+    );
+  };
+
+  const renderPasswordChecks = () => {
+    if (!password) return null;
+    
+    const checks = [
+      { key: 'length', label: `至少${PASSWORD_MIN_LENGTH}位字符`, pass: passwordValidation.checks.length },
+      { key: 'hasLowerCase', label: '包含小写字母', pass: passwordValidation.checks.hasLowerCase },
+      { key: 'hasUpperCase', label: '包含大写字母', pass: passwordValidation.checks.hasUpperCase },
+      { key: 'hasNumber', label: '包含数字', pass: passwordValidation.checks.hasNumber },
+      { key: 'hasSpecialChar', label: '包含特殊符号', pass: passwordValidation.checks.hasSpecialChar },
+      { key: 'varietyCount', label: '至少满足以上两种类型', pass: passwordValidation.checks.varietyCount }
+    ];
+    
+    return (
+      <View className={styles.passwordChecks}>
+        {checks.map((check) => (
+          <View key={check.key} className={styles.checkItem}>
+            <View className={classnames(styles.checkIcon, check.pass ? styles.pass : styles.fail)}>
+              {check.pass ? '✓' : '○'}
+            </View>
+            <Text className={classnames(styles.checkText, check.pass ? styles.pass : styles.fail)}>
+              {check.label}
+            </Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
 
   return (
     <View className={styles.page}>
@@ -143,12 +206,12 @@ const RegisterPage: React.FC = () => {
 
         <View className={styles.formItem}>
           <Text className={styles.label}>验证码</Text>
-          <View className={classnames(styles.inputWrapper, focusedField === 'code' && styles.focused)}>
+          <View className={classnames(styles.codeInputWrapper, focusedField === 'code' && styles.focused)}>
             <Text className={styles.inputIcon}>🔐</Text>
             <Input
               className={styles.input}
               type="number"
-              placeholder="请输入验证码"
+              placeholder="请输入6位验证码"
               placeholderClass={styles.input}
               value={code}
               onInput={(e) => setCode(e.detail.value)}
@@ -173,7 +236,7 @@ const RegisterPage: React.FC = () => {
             <Input
               className={styles.input}
               password={!showPassword}
-              placeholder="请输入密码（至少6位）"
+              placeholder={`请输入密码（至少${PASSWORD_MIN_LENGTH}位）`}
               placeholderClass={styles.input}
               value={password}
               onInput={(e) => setPassword(e.detail.value)}
@@ -187,6 +250,9 @@ const RegisterPage: React.FC = () => {
             </View>
           </View>
         </View>
+
+        {renderStrengthBar()}
+        {renderPasswordChecks()}
 
         <View className={styles.formItem}>
           <Text className={styles.label}>确认密码</Text>
@@ -209,6 +275,12 @@ const RegisterPage: React.FC = () => {
             </View>
           </View>
         </View>
+
+        {confirmError && (
+          <View className={styles.passwordError}>
+            <Text className={styles.errorText}>{confirmError}</Text>
+          </View>
+        )}
 
         <Button
           className={classnames(styles.registerBtn, !canRegister && styles.disabled)}

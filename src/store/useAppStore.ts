@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { UserInfo, SportRecord, SportTarget, ResetTokenData } from '@/types';
 import { storage } from '@/utils/storage';
+import { validatePassword } from '@/utils/password';
 
 interface AppState {
   user: UserInfo | null;
@@ -193,8 +194,9 @@ export const useAppStore = create<AppState>((set, get) => ({
       return false;
     }
     
-    if (!newPassword || newPassword.length < 6) {
-      console.warn('[Auth] 密码格式不正确');
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
+      console.warn('[Auth] 密码验证失败', passwordValidation.errors);
       return false;
     }
     
